@@ -235,13 +235,13 @@ export default function TokenCard({
                 cursor: "pointer",
                 color: isActive ? "#4ade80" : "#475569",
                 fontSize: "var(--fs-xs)",
-                fontWeight: 700,
+                fontWeight: 900,
                 fontFamily: "Hind Siliguri, sans-serif",
                 transition: "all 0.2s",
                 whiteSpace: "nowrap",
               }}
             >
-              ✓ দেওয়া হয়েছে <ChevronRight size={13} />
+              ✓ দেওয়া হলে এখানে ক্লিক করুন ! <ChevronRight size={13} />
             </motion.button>
           )}
         </div>
