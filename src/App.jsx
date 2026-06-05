@@ -342,7 +342,7 @@ export default function App() {
                     fontSize: "var(--fs-base)",
                     lineHeight: 1.7,
                     fontFamily: "Hind Siliguri, JetBrains Mono, sans-serif",
-                    resize: "vertical",
+                    resize: "none",
                     outline: "none",
                     transition: "border-color 0.25s",
                   }}
