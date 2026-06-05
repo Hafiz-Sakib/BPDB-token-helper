@@ -121,8 +121,8 @@ export default function VisitorCounter() {
         <span
           style={{
             fontFamily: "'Hind Siliguri', sans-serif",
-            fontWeight: 500,
-            fontSize: 11,
+            fontWeight: 600,
+            fontSize: 15,
             lineHeight: "14px",
             color: "#4a7a5a",
             whiteSpace: "nowrap",
