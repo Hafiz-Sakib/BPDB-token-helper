@@ -2,95 +2,122 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Users } from "lucide-react";
 
-// counterapi.dev V1 — no auth, no signup, free, CORS-friendly
-// Namespace: bpdb-token-helper | Counter: visitors
+// Always UP — counterapi.dev is idempotent enough for page views
 const API_UP = "https://api.counterapi.dev/v1/bpdb-token-helper/visitors/up";
-const API_GET = "https://api.counterapi.dev/v1/bpdb-token-helper/visitors";
 
 export default function VisitorCounter() {
   const [count, setCount] = useState(null);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
-    const alreadyCounted = sessionStorage.getItem("bpdb_counted");
+    const isLocal =
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1";
+
+    if (isLocal) {
+      setCount(999);
+      return;
+    }
+
     (async () => {
       try {
-        const url = alreadyCounted ? API_GET : API_UP;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error();
+        const res = await fetch(API_UP, { cache: "no-store" });
         const data = await res.json();
-        setCount(data.count ?? data.value ?? 0);
-        if (!alreadyCounted) sessionStorage.setItem("bpdb_counted", "1");
+        // v1 returns { count: N, namespace: ..., name: ... }
+        const val =
+          typeof data?.count === "number"
+            ? data.count
+            : typeof data?.value === "number"
+              ? data.value
+              : typeof data?.hits === "number"
+                ? data.hits
+                : null;
+        if (val !== null) setCount(val);
       } catch {
-        setError(true);
+        // API down — don't show broken badge
       }
     })();
   }, []);
 
-  if (error || count === null) return null;
+  // Hide only if API failed completely
+  if (count === null) return null;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6, duration: 0.4 }}
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.4, duration: 0.35 }}
       title="মোট ভিজিটর"
       style={{
         position: "fixed",
-        top: 14,
-        right: 16,
-        zIndex: 1000,
+        top: 12,
+        right: 12,
+        zIndex: 9999,
         display: "flex",
         alignItems: "center",
-        gap: 6,
-        background: "rgba(7,36,58,0.88)",
-        border: "1px solid rgba(22,163,74,0.28)",
-        borderRadius: 24,
-        padding: "5px 12px 5px 8px",
-        backdropFilter: "blur(12px)",
+        gap: 5,
+        background: "rgba(4,24,42,0.93)",
+        border: "1px solid rgba(22,163,74,0.38)",
+        borderRadius: 20,
+        padding: "4px 10px 4px 6px",
+        backdropFilter: "blur(14px)",
+        WebkitBackdropFilter: "blur(14px)",
+        boxShadow: "0 2px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(22,163,74,0.08)",
         cursor: "default",
-        boxShadow: "0 2px 16px rgba(0,0,0,0.4)",
+        userSelect: "none",
       }}
     >
-      {/* Pulsing icon */}
-      <motion.div
-        animate={{ scale: [1, 1.18, 1] }}
-        transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-        style={{
-          width: 24,
-          height: 24,
-          borderRadius: "50%",
-          background: "rgba(22,163,74,0.18)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-        }}
+      {/* Pulse ring + icon */}
+      <div
+        style={{ position: "relative", width: 22, height: 22, flexShrink: 0 }}
       >
-        <Users size={13} color="#22c55e" />
-      </motion.div>
+        <motion.div
+          animate={{ scale: [1, 2, 1], opacity: [0.4, 0, 0.4] }}
+          transition={{ repeat: Infinity, duration: 2.8, ease: "easeOut" }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: "50%",
+            border: "1.5px solid rgba(22,163,74,0.5)",
+          }}
+        />
+        <div
+          style={{
+            width: 22,
+            height: 22,
+            borderRadius: "50%",
+            background: "rgba(22,163,74,0.15)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Users size={12} color="#22c55e" strokeWidth={2.2} />
+        </div>
+      </div>
 
       <div
-        style={{ display: "flex", flexDirection: "column", lineHeight: 1.15 }}
+        style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}
       >
         <span
           style={{
-            fontFamily: "Barlow Condensed, sans-serif",
+            fontFamily: "Barlow Condensed, monospace",
             fontWeight: 700,
-            fontSize: 14,
+            fontSize: "clamp(12px, 2.5vw, 15px)",
             color: "#22c55e",
-            letterSpacing: "0.04em",
+            letterSpacing: "0.03em",
+            minWidth: 24,
           }}
         >
           {count.toLocaleString()}
         </span>
         <span
           style={{
-            fontFamily: "Hind Siliguri, sans-serif",
-            fontSize: 9,
-            color: "#475569",
+            fontFamily: "sans-serif",
+            fontSize: "clamp(7px, 1.5vw, 9px)",
+            color: "#4a6a5a",
             textTransform: "uppercase",
-            letterSpacing: "0.1em",
+            letterSpacing: "0.12em",
+            fontWeight: 600,
           }}
         >
           ভিজিটর
