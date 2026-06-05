@@ -111,7 +111,7 @@ export default function VisitorCounter() {
             letterSpacing: "0.04em",
           }}
         >
-          ভিজিটর
+          জন ভিজিট করেছেন
         </span>
       </div>
 
