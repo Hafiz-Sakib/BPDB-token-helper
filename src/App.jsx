@@ -55,7 +55,7 @@ export default function App() {
     setActiveIdx(0);
     setAllDone(false);
     setParsed(true);
-    toast.success(`${result.tokens.length}টি টোকেন পাওয়া গেছে!`, {
+    toast.success(`${result.tokens.length} টি টোকেন আলাদা করা হয়েছে!`, {
       icon: "⚡",
     });
   }, [rawText]);
