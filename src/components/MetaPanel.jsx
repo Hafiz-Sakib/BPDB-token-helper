@@ -77,19 +77,19 @@ export default function MetaPanel({ meta }) {
     },
     meta.vendingAmt && {
       icon: CreditCard,
-      label: "মোট পরিশোধ",
+      label: "মোট রিচার্জকৃত অ্যামাউন্ট",
       value: `৳ ${meta.vendingAmt.toFixed(2)}`,
       color: "#f4c542",
     },
     meta.energyCost && {
       icon: Zap,
-      label: "বিদ্যুৎ খরচ",
+      label: "মিটারে যোগ হওয়া টাকার পরিমাণ",
       value: `৳ ${meta.energyCost.toFixed(2)}`,
       color: "#4ade80",
     },
     meta.totalCharge && {
       icon: Receipt,
-      label: "মোট চার্জ",
+      label: "মোট চার্জ কাটার পরিমাণ",
       value: `৳ ${meta.totalCharge.toFixed(2)}`,
       color: "#fb923c",
     },
@@ -160,7 +160,7 @@ export default function MetaPanel({ meta }) {
         <div>
           <div
             style={{
-              fontFamily: "Barlow Condensed, sans-serif",
+              fontFamily: "Hind Siliguri, sans-serif",
               fontWeight: 800,
               fontSize: "var(--fs-lg)",
               textTransform: "uppercase",
@@ -178,7 +178,8 @@ export default function MetaPanel({ meta }) {
                 marginTop: 2,
               }}
             >
-              Token Sequence: {meta.seqStart} → {meta.seqEnd}
+              রিচার্জের পর কোন খাতে কত টাকা কাটা হয়েছে এবং আপনার মিটারে কত টাকা
+              যোগ হবে, তার বিস্তারিত নিচে দেওয়া হলো :
             </div>
           )}
         </div>
