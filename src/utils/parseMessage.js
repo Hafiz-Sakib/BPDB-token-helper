@@ -1,126 +1,115 @@
 /**
- * Parses a BPDB prepaid token SMS / message and extracts:
- *  - tokens: array of 20-digit strings
- *  - meta: { meterNo, vendingAmt, energyCost, totalCharge, meterRent, demandCharge, vat, rebate, seqRange }
+ * Robust BPDB / DESCO / REB prepaid token message parser.
+ *
+ * Strategy:
+ *  1. Locate the token block precisely — the comma-separated list that appears
+ *     between "Prepaid Token is" (or "Token is") and the first metadata keyword
+ *     (SqNo, Meter No, Vending, etc.).
+ *  2. Within that block each comma-delimited segment is stripped to digits; if
+ *     exactly 20 digits result → one token.  Groups ≠ 20 digits are dropped
+ *     (avoids meter-number / balance contamination).
+ *  3. Metadata is extracted from the remainder using tightly-anchored regexes
+ *     that will NOT match token digits.
  */
+
+/** Marker keywords that signal the end of the token list */
+const META_KEYWORDS = /SqNo|SquNo|Sq\s*No|for\s+offline|Meter\s*No|Vending|Enrg|Total|Demand|VAT|Rebate/i;
+
 export function parseMessage(raw) {
   if (!raw || !raw.trim()) return { tokens: [], meta: null };
 
-  // Strip all whitespace variations, then extract digit groups
-  const cleaned = raw.replace(/\s+/g, '');
-
-  // Extract all continuous digit runs
-  const allDigits = cleaned.match(/\d+/g) || [];
-
-  // Find 20-digit tokens (may be split by dashes in original)
-  // Strategy: extract digit sequences from dash-separated groups
-  const tokenSection = extractTokenSection(raw);
-  const tokens = tokenSection;
-
-  // Extract metadata
-  const meta = extractMeta(raw);
-
+  const tokens = extractTokens(raw);
+  const meta   = extractMeta(raw);
   return { tokens, meta };
 }
 
-function extractTokenSection(raw) {
+/* ─── TOKEN EXTRACTION ──────────────────────────────────────────────────── */
+
+function extractTokens(raw) {
+  // Collapse newlines so we can treat the message as one string
+  const flat = raw.replace(/\r?\n/g, ' ');
+
+  // Find the start of the token list
+  const startMatch = flat.match(/(?:Prepaid\s+Token\s+is|Token\s+is)\s*/i);
+  if (!startMatch) return fallbackExtract(raw);
+
+  const afterHeader = flat.slice(startMatch.index + startMatch[0].length);
+
+  // Find where token list ends (first meta keyword or end of string)
+  const endMatch = afterHeader.search(META_KEYWORDS);
+  const tokenBlock = endMatch === -1 ? afterHeader : afterHeader.slice(0, endMatch);
+
+  return parseTokenBlock(tokenBlock);
+}
+
+function parseTokenBlock(block) {
+  // Each token is separated by commas; dashes and spaces are formatting only
+  const segments = block.split(',');
   const tokens = [];
 
-  // Normalize: remove spaces around digits/dashes
-  // Match groups of digits separated by dashes that together make 20 digits
-  // Pattern: groups like XXXX-XXXX-XXXX-XXXX-XXXX (4+4+4+4+4 = 20)
-  // or XXXXXXXXXXXXXXXXXXXXXXXX (20 straight)
-
-  // Remove all whitespace from the raw text first
-  const noSpace = raw.replace(/\s+/g, '');
-
-  // Find token block: after "Token is" or "Prepaid Token is"
-  // Tokens end before non-token meta info
-  let tokenBlock = '';
-
-  // Try to isolate the token list region
-  const tokenMatch = noSpace.match(/(?:PrepaidTokenis|Tokenis|token:|tokens:)([0-9,\-]+)/i);
-  if (tokenMatch) {
-    tokenBlock = tokenMatch[1];
-  } else {
-    // Try to find a block with comma-separated groups of digits and dashes
-    const blockMatch = noSpace.match(/([0-9]{4}-[0-9]{4}-[0-9\s-]{10,}(?:,[0-9\-]+)*)/);
-    if (blockMatch) {
-      tokenBlock = blockMatch[0];
-    }
-  }
-
-  if (!tokenBlock) {
-    // Fallback: scan entire text for 20-digit sequences
-    const digitsOnly = raw.replace(/[^0-9,]/g, ' ');
-    tokenBlock = digitsOnly;
-  }
-
-  // Split on commas to get individual token strings
-  const parts = tokenBlock.split(',');
-
-  for (const part of parts) {
-    // Extract only digits from this part
-    const digits = part.replace(/[^0-9]/g, '');
+  for (const seg of segments) {
+    const digits = seg.replace(/[^0-9]/g, '');
     if (digits.length === 20) {
       tokens.push(digits);
-    } else if (digits.length > 20) {
-      // May contain multiple tokens concatenated
-      for (let i = 0; i + 20 <= digits.length; i += 20) {
-        tokens.push(digits.slice(i, i + 20));
-      }
     }
+    // Intentionally ignore segments that are NOT exactly 20 digits
+    // (prevents balance numbers, meter numbers, etc. from sneaking in)
   }
-
   return tokens;
 }
 
+/** Last-resort: scan whole message for comma-separated 20-digit groups */
+function fallbackExtract(raw) {
+  const flat = raw.replace(/\r?\n/g, ' ');
+  // Match patterns like XXXX-XXXX-XXXX-XXXX-XXXX (5 groups of 4 digits)
+  const pattern = /\b\d{4}[-\s]\d{4}[-\s]\d{4}[-\s]\d{4}[-\s]\d{4}\b/g;
+  const matches = flat.match(pattern) || [];
+  return matches.map(m => m.replace(/[^0-9]/g, ''));
+}
+
+/* ─── METADATA EXTRACTION ───────────────────────────────────────────────── */
+
 function extractMeta(raw) {
+  const flat = raw.replace(/\r?\n/g, ' ');
   const meta = {};
 
-  // Meter No
-  const meterMatch = raw.match(/(?:Meter\s*No[:\s.]+)([0-9]+)/i);
+  // Meter No — must follow "Meter No:" / "No:" anchored near "offline"
+  // The meter number appears after "for offline Meter No:" or standalone "No:"
+  const meterMatch = flat.match(/(?:offline\s+Meter\s*\n?\s*No[:\s]+|(?<!\w)No[:\s]+)(\d{8,14})/i);
   if (meterMatch) meta.meterNo = meterMatch[1];
 
-  // Vending Amount
-  const vendMatch = raw.match(/(?:Vending\s*Amt[:\s]+)([0-9.]+)/i);
+  const vendMatch   = flat.match(/Vending\s*\n?\s*Amt[:\s]+([\d.]+)/i);
   if (vendMatch) meta.vendingAmt = parseFloat(vendMatch[1]);
 
-  // Energy Cost
-  const energyMatch = raw.match(/(?:Enrg\s*Cost[:\s]+)([0-9.]+)/i);
+  const energyMatch = flat.match(/Enrg\s*\n?\s*Cost[:\s]+([\d.]+)/i);
   if (energyMatch) meta.energyCost = parseFloat(energyMatch[1]);
 
-  // Total Charge
-  const totalMatch = raw.match(/(?:Total\s*Charge[:\s]+)([0-9.]+)/i);
+  const totalMatch  = flat.match(/Total\s*\n?\s*Charge[:\s]+([\d.]+)/i);
   if (totalMatch) meta.totalCharge = parseFloat(totalMatch[1]);
 
-  // Meter Rent
-  const rentMatch = raw.match(/(?:Meter\s*Rent\s*\d*P?[:\s]+)([0-9.]+)/i);
+  const rentMatch   = flat.match(/Meter\s*\n?\s*Rent\s*\d*P?[:\s]+([\d.]+)/i);
   if (rentMatch) meta.meterRent = parseFloat(rentMatch[1]);
 
-  // Demand Charge
-  const demandMatch = raw.match(/(?:Demand\s*Charge[:\s]+)([0-9.]+)/i);
+  const demandMatch = flat.match(/Demand\s*\n?\s*Charge[:\s]+([\d.]+)/i);
   if (demandMatch) meta.demandCharge = parseFloat(demandMatch[1]);
 
-  // VAT
-  const vatMatch = raw.match(/(?:VAT[:\s]+)([0-9.]+)/i);
+  const vatMatch    = flat.match(/VAT[:\s]+([\d.]+)/i);
   if (vatMatch) meta.vat = parseFloat(vatMatch[1]);
 
-  // Rebate
-  const rebateMatch = raw.match(/(?:Rebate[:\s]+)([-0-9.]+)/i);
+  const rebateMatch = flat.match(/Rebate[:\s]+(-?[\d.]+)/i);
   if (rebateMatch) meta.rebate = parseFloat(rebateMatch[1]);
 
-  // Sequence range e.g. "SqNo:-1~9"
-  const seqMatch = raw.match(/(?:S(?:q|qu)\s*No[:\s]*)([0-9]+)\s*[~-]\s*([0-9]+)/i);
+  // Sequence range  e.g. "SqNo:-1~9" or "SquNo:-1~9"
+  const seqMatch = flat.match(/S(?:qu?)\s*No[:\s-]*(\d+)\s*[~–-]\s*(\d+)/i);
   if (seqMatch) {
     meta.seqStart = parseInt(seqMatch[1]);
-    meta.seqEnd = parseInt(seqMatch[2]);
+    meta.seqEnd   = parseInt(seqMatch[2]);
   }
 
   return Object.keys(meta).length > 0 ? meta : null;
 }
 
-/** Format 20-digit token into XXXX-XXXX-XXXX-XXXX-XXXX */
+/** Format 20-digit token as XXXX-XXXX-XXXX-XXXX-XXXX */
 export function formatToken(digits) {
   return digits.replace(/(.{4})/g, '$1-').slice(0, -1);
 }

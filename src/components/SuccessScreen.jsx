@@ -4,15 +4,15 @@ import { motion } from 'framer-motion';
 export default function SuccessScreen({ total, onReset }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.82 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ type: 'spring', stiffness: 200, damping: 18 }}
       style={{
-        textAlign: 'center', padding: '48px 24px',
+        textAlign: 'center',
+        padding: 'clamp(32px,6vw,56px) clamp(16px,4vw,32px)',
         background: 'rgba(22,163,74,0.06)',
         border: '1px solid rgba(22,163,74,0.35)',
-        borderRadius: 24,
-        marginTop: 8,
+        borderRadius: 24, marginTop: 8,
       }}
     >
       <motion.div
@@ -29,11 +29,12 @@ export default function SuccessScreen({ total, onReset }) {
         transition={{ delay: 0.4 }}
         style={{
           fontFamily: 'Barlow Condensed, sans-serif',
-          fontWeight: 900, fontSize: 32, textTransform: 'uppercase',
-          letterSpacing: '0.04em',
+          fontWeight: 900,
+          fontSize: 'clamp(1.6rem, 5vw, 2.4rem)',
+          textTransform: 'uppercase', letterSpacing: '0.04em',
           background: 'linear-gradient(135deg,#22c55e,#86efac)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-          marginBottom: 10,
+          backgroundClip: 'text', marginBottom: 10,
         }}
       >
         সব টোকেন সম্পন্ন!
@@ -43,13 +44,16 @@ export default function SuccessScreen({ total, onReset }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        style={{ color: '#94a3b8', fontSize: 14, fontFamily: 'Hind Siliguri', marginBottom: 28 }}
+        style={{
+          color: '#94a3b8', fontSize: 'var(--fs-base)',
+          fontFamily: 'Hind Siliguri, sans-serif', marginBottom: 28,
+          lineHeight: 1.65,
+        }}
       >
-        {total}টি টোকেন সফলভাবে মিটারে দেওয়া হয়েছে।
+        {total}টি টোকেন সফলভাবে মিটারে দেওয়া হয়েছে।<br />
         আপনার মিটার এখন আপডেট হয়ে গেছে।
       </motion.p>
 
-      {/* Particle dots */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 28 }}>
         {[...Array(7)].map((_, i) => (
           <motion.div
@@ -57,7 +61,7 @@ export default function SuccessScreen({ total, onReset }) {
             animate={{ y: [0, -12, 0], opacity: [0.4, 1, 0.4] }}
             transition={{ repeat: Infinity, duration: 1.2, delay: i * 0.12, ease: 'easeInOut' }}
             style={{
-              width: 8, height: 8, borderRadius: '50%',
+              width: 9, height: 9, borderRadius: '50%',
               background: i % 2 === 0 ? '#22c55e' : '#f4c542',
             }}
           />
@@ -71,8 +75,9 @@ export default function SuccessScreen({ total, onReset }) {
         style={{
           background: 'linear-gradient(135deg,#15803d,#16a34a)',
           border: 'none', borderRadius: 14,
-          padding: '12px 28px',
-          color: '#fff', fontWeight: 700, fontSize: 14,
+          padding: 'clamp(10px,2vw,14px) clamp(24px,4vw,36px)',
+          color: '#fff', fontWeight: 700,
+          fontSize: 'var(--fs-md)',
           fontFamily: 'Hind Siliguri, sans-serif',
           cursor: 'pointer',
         }}

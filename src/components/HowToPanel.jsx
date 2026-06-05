@@ -20,19 +20,20 @@ export default function HowToPanel() {
         whileTap={{ scale: 0.98 }}
         onClick={() => setOpen(!open)}
         style={{
-          width: '100%', padding: '12px 18px',
-          background: 'rgba(7,36,58,0.8)',
+          width: '100%', padding: '13px 18px',
+          background: 'rgba(7,36,58,0.85)',
           border: '1px solid rgba(22,163,74,0.25)',
           borderRadius: open ? '16px 16px 0 0' : 16,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           cursor: 'pointer', color: '#fff',
-          fontFamily: 'Hind Siliguri, sans-serif', fontSize: 14, fontWeight: 600,
+          fontFamily: 'Hind Siliguri, sans-serif',
+          fontSize: 'var(--fs-base)', fontWeight: 600,
           transition: 'border-radius 0.3s',
         }}
       >
         <span>📋 টোকেন দেওয়ার নিয়ম</span>
-        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.3 }}>
-          <ChevronDown size={16} color="#22c55e" />
+        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.28 }}>
+          <ChevronDown size={18} color="#22c55e" />
         </motion.div>
       </motion.button>
 
@@ -42,39 +43,47 @@ export default function HowToPanel() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            transition={{ duration: 0.32, ease: 'easeInOut' }}
             style={{ overflow: 'hidden' }}
           >
             <div style={{
-              background: 'rgba(7,36,58,0.6)',
+              background: 'rgba(7,36,58,0.7)',
               border: '1px solid rgba(22,163,74,0.18)',
-              borderTop: 'none',
-              borderRadius: '0 0 16px 16px',
-              padding: '16px 18px',
+              borderTop: 'none', borderRadius: '0 0 16px 16px',
+              padding: 'clamp(14px,3vw,20px)',
             }}>
               {steps.map((s, i) => (
                 <motion.div
                   key={s.num}
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.06 }}
+                  transition={{ delay: i * 0.055 }}
                   style={{
                     display: 'flex', gap: 12, alignItems: 'flex-start',
-                    marginBottom: i < steps.length - 1 ? 14 : 0,
+                    marginBottom: i < steps.length - 1 ? 15 : 0,
                   }}
                 >
                   <div style={{
-                    width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
+                    width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
                     background: 'linear-gradient(135deg,#15803d,#22c55e)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 11, fontWeight: 800, fontFamily: 'Barlow Condensed',
-                    marginTop: 1,
+                    fontSize: 'var(--fs-xs)', fontWeight: 800,
+                    fontFamily: 'Barlow Condensed, sans-serif',
+                    marginTop: 2,
                   }}>{s.num}</div>
                   <div>
-                    <div style={{ fontSize: 14, color: '#e2e8f0', fontFamily: 'Hind Siliguri', lineHeight: 1.5 }}>
+                    <div style={{
+                      fontSize: 'var(--fs-base)',
+                      color: '#e2e8f0',
+                      fontFamily: 'Hind Siliguri, sans-serif',
+                      lineHeight: 1.55,
+                    }}>
                       {s.bn}
                     </div>
-                    <div style={{ fontSize: 11, color: '#475569', fontFamily: 'JetBrains Mono', marginTop: 2 }}>
+                    <div style={{
+                      fontSize: 'var(--fs-xs)', color: '#475569',
+                      fontFamily: 'JetBrains Mono, monospace', marginTop: 2,
+                    }}>
                       {s.en}
                     </div>
                   </div>
@@ -86,12 +95,14 @@ export default function HowToPanel() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
                 style={{
-                  marginTop: 16, padding: '10px 14px',
+                  marginTop: 18, padding: '11px 14px',
                   background: 'rgba(244,197,66,0.08)',
                   border: '1px solid rgba(244,197,66,0.25)',
-                  borderRadius: 10, fontSize: 12,
-                  color: '#fbbf24', fontFamily: 'Hind Siliguri',
-                  lineHeight: 1.6,
+                  borderRadius: 10,
+                  fontSize: 'var(--fs-sm)',
+                  color: '#fbbf24',
+                  fontFamily: 'Hind Siliguri, sans-serif',
+                  lineHeight: 1.65,
                 }}
               >
                 ⚠️ <strong>সতর্কতা:</strong> টোকেনগুলো অবশ্যই ক্রম অনুযায়ী (Sequence) দিতে হবে।

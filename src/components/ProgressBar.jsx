@@ -12,23 +12,23 @@ export default function ProgressBar({ done, total }) {
         background: 'var(--card)',
         border: '1px solid rgba(255,255,255,0.06)',
         borderRadius: 16,
-        padding: '16px 20px',
+        padding: 'clamp(14px,2.5vw,20px)',
         marginBottom: 20,
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-        <span style={{ fontSize: 13, color: '#94a3b8', fontFamily: 'Hind Siliguri' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, alignItems: 'center' }}>
+        <span style={{ fontSize: 'var(--fs-base)', color: '#94a3b8', fontFamily: 'Hind Siliguri, sans-serif' }}>
           অগ্রগতি
         </span>
         <span style={{
-          fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 16,
+          fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800,
+          fontSize: 'var(--fs-lg)',
           color: pct === 100 ? '#22c55e' : '#f4c542',
         }}>
           {done}/{total} টোকেন — {pct}%
         </span>
       </div>
 
-      {/* Track */}
       <div style={{
         height: 8, borderRadius: 99,
         background: 'rgba(255,255,255,0.06)',
@@ -41,8 +41,8 @@ export default function ProgressBar({ done, total }) {
           style={{
             height: '100%',
             background: pct === 100
-              ? 'linear-gradient(90deg, #15803d, #22c55e)'
-              : 'linear-gradient(90deg, #d4a017, #f4c542)',
+              ? 'linear-gradient(90deg,#15803d,#22c55e)'
+              : 'linear-gradient(90deg,#d4a017,#f4c542)',
             borderRadius: 99,
             boxShadow: pct === 100
               ? '0 0 12px rgba(22,163,74,0.6)'
@@ -51,20 +51,15 @@ export default function ProgressBar({ done, total }) {
         />
       </div>
 
-      {/* Dots */}
-      <div style={{ display: 'flex', gap: 4, marginTop: 10, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: 5, marginTop: 10, flexWrap: 'wrap' }}>
         {Array.from({ length: total }).map((_, i) => (
           <motion.div
             key={i}
             animate={i < done ? { scale: [1, 1.3, 1] } : {}}
             transition={{ duration: 0.3 }}
             style={{
-              width: 10, height: 10, borderRadius: '50%',
-              background: i < done
-                ? '#22c55e'
-                : i === done
-                ? '#f4c542'
-                : 'rgba(255,255,255,0.1)',
+              width: 11, height: 11, borderRadius: '50%',
+              background: i < done ? '#22c55e' : i === done ? '#f4c542' : 'rgba(255,255,255,0.1)',
               boxShadow: i < done ? '0 0 6px rgba(22,163,74,0.7)' : undefined,
               transition: 'background 0.3s',
             }}

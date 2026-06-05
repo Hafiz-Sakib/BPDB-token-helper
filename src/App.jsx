@@ -19,14 +19,21 @@ Amt:2000.0,Enrg Cost:
 Rent 1P:40,Demand
 Charge:168,VAT:95.24,Rebate:-9.23.`;
 
+/* ─── Shared style tokens ─────────────────────────────────── */
+const card = {
+  background: 'var(--card)',
+  border: '1px solid rgba(255,255,255,0.06)',
+  borderRadius: 20,
+};
+
 export default function App() {
-  const [rawText, setRawText] = useState('');
-  const [tokens, setTokens] = useState([]);
-  const [meta, setMeta] = useState(null);
-  const [doneSet, setDoneSet] = useState(new Set());
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [parsed, setParsed] = useState(false);
-  const [allDone, setAllDone] = useState(false);
+  const [rawText,  setRawText]  = useState('');
+  const [tokens,   setTokens]   = useState([]);
+  const [meta,     setMeta]     = useState(null);
+  const [doneSet,  setDoneSet]  = useState(new Set());
+  const [activeIdx,setActiveIdx]= useState(0);
+  const [parsed,   setParsed]   = useState(false);
+  const [allDone,  setAllDone]  = useState(false);
 
   const handleParse = useCallback(() => {
     if (!rawText.trim()) {
@@ -77,13 +84,9 @@ export default function App() {
   };
 
   const handleReset = () => {
-    setParsed(false);
-    setTokens([]);
-    setMeta(null);
-    setDoneSet(new Set());
-    setActiveIdx(0);
-    setAllDone(false);
-    setRawText('');
+    setParsed(false); setTokens([]); setMeta(null);
+    setDoneSet(new Set()); setActiveIdx(0);
+    setAllDone(false); setRawText('');
   };
 
   const doneCount = doneSet.size;
@@ -91,13 +94,13 @@ export default function App() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'radial-gradient(ellipse 70% 55% at 20% -5%, rgba(30,58,138,0.35) 0%, transparent 65%), radial-gradient(ellipse 60% 50% at 80% 10%, rgba(22,163,74,0.18) 0%, transparent 60%), linear-gradient(180deg,#001020 0%,#001b2a 100%)',
-      backgroundImage: `
+      background: `
         radial-gradient(ellipse 70% 55% at 20% -5%, rgba(30,58,138,0.35) 0%, transparent 65%),
         radial-gradient(ellipse 60% 50% at 80% 10%, rgba(22,163,74,0.18) 0%, transparent 60%),
         linear-gradient(180deg, #001020 0%, #001b2a 100%)
       `,
       paddingBottom: 60,
+      fontFamily: 'Hind Siliguri, sans-serif',
     }}>
       <Toaster
         position="top-center"
@@ -107,107 +110,129 @@ export default function App() {
             color: '#fff',
             border: '1px solid rgba(22,163,74,0.3)',
             fontFamily: 'Hind Siliguri, sans-serif',
-            fontSize: 14,
+            fontSize: 'var(--fs-base)',
           },
         }}
       />
 
-      {/* Pitch grid overlay */}
+      {/* Grid overlay */}
       <div style={{
         position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
-        backgroundImage: 'linear-gradient(rgba(22,163,74,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(22,163,74,0.018) 1px, transparent 1px)',
+        backgroundImage:
+          'linear-gradient(rgba(22,163,74,0.018) 1px, transparent 1px),' +
+          'linear-gradient(90deg, rgba(22,163,74,0.018) 1px, transparent 1px)',
         backgroundSize: '72px 72px',
       }} />
 
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto', padding: '0 16px' }}>
+      {/* Content wrapper — responsive max-width */}
+      <div style={{
+        position: 'relative', zIndex: 1,
+        maxWidth: 'min(680px, 96vw)',
+        margin: '0 auto',
+        padding: '0 clamp(12px, 3vw, 24px)',
+      }}>
 
         {/* ── HEADER ── */}
         <motion.header
           initial={{ opacity: 0, y: -24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55 }}
-          style={{ textAlign: 'center', padding: '40px 0 28px' }}
+          transition={{ duration: 0.5 }}
+          style={{ textAlign: 'center', padding: 'clamp(28px,5vw,48px) 0 clamp(20px,4vw,32px)' }}
         >
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-            style={{ fontSize: 52, marginBottom: 12, display: 'block' }}
+            style={{ fontSize: 'clamp(40px,8vw,58px)', marginBottom: 12, display: 'block', lineHeight: 1 }}
           >⚡</motion.div>
 
           <h1 style={{
-            fontFamily: 'Barlow Condensed, sans-serif',
-            fontWeight: 900, fontSize: 'clamp(26px,6vw,38px)',
-            textTransform: 'uppercase', letterSpacing: '-0.01em',
+            fontFamily: 'Hind Siliguri, sans-serif',
+            fontWeight: 700,
+            fontSize: 'clamp(1.7rem, 6vw, 2.6rem)',
             background: 'linear-gradient(135deg,#22c55e 0%,#16a34a 50%,#86efac 100%)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            marginBottom: 6,
+            backgroundClip: 'text', marginBottom: 8,
+            lineHeight: 1.2,
           }}>
             BPDB প্রিপেইড টোকেন
           </h1>
+
           <p style={{
             fontFamily: 'Hind Siliguri, sans-serif',
-            fontSize: 14, color: '#64748b',
+            fontSize: 'var(--fs-base)',
+            color: '#64748b', lineHeight: 1.6,
           }}>
             টোকেন বার্তা পেস্ট করুন — সহজে একটি একটি করে দিন
           </p>
 
-          {/* Live dot */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12 }}>
             <motion.div
-              animate={{ boxShadow: ['0 0 0px rgba(22,163,74,0.4)','0 0 14px rgba(22,163,74,0.8)','0 0 0px rgba(22,163,74,0.4)'] }}
+              animate={{ boxShadow: [
+                '0 0 0px rgba(22,163,74,0.4)',
+                '0 0 14px rgba(22,163,74,0.8)',
+                '0 0 0px rgba(22,163,74,0.4)',
+              ]}}
               transition={{ repeat: Infinity, duration: 2 }}
               style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e' }}
             />
-            <span style={{ fontSize: 11, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 700 }}>
+            <span style={{
+              fontSize: 'var(--fs-xs)', color: '#475569',
+              textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 700,
+              fontFamily: 'Barlow Condensed, sans-serif',
+            }}>
               Bangladesh Power Development Board
             </span>
           </div>
         </motion.header>
 
-        {/* ── INPUT SECTION ── */}
+        {/* ── MAIN CONTENT ── */}
         <AnimatePresence mode="wait">
+
+          {/* INPUT SCREEN */}
           {!parsed && (
             <motion.div
               key="input"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.38 }}
             >
               <HowToPanel />
 
               {/* Textarea card */}
-              <div style={{
-                background: 'var(--card)',
-                border: '1px solid rgba(255,255,255,0.06)',
-                borderRadius: 20,
-                padding: '20px',
-                marginBottom: 16,
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <div style={{ ...card, padding: 'clamp(16px,3vw,22px)', marginBottom: 16 }}>
+                <div style={{
+                  display: 'flex', justifyContent: 'space-between',
+                  alignItems: 'center', marginBottom: 12,
+                  flexWrap: 'wrap', gap: 8,
+                }}>
                   <span style={{
-                    fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 13,
-                    textTransform: 'uppercase', letterSpacing: '0.1em', color: '#94a3b8',
+                    fontFamily: 'Hind Siliguri, sans-serif', fontWeight: 700,
+                    fontSize: 'var(--fs-sm)',
+                    textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8',
                   }}>
-                    টোকেন বার্তা
+                    টোকেন বার্তা পেস্ট করুন
                   </span>
                   <div style={{ display: 'flex', gap: 8 }}>
                     <motion.button whileTap={{ scale: 0.95 }} onClick={handlePaste}
                       style={{
                         display: 'flex', alignItems: 'center', gap: 5,
-                        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: 8, padding: '5px 10px', cursor: 'pointer',
-                        color: '#94a3b8', fontSize: 12, fontFamily: 'Hind Siliguri',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: 8, padding: '6px 12px', cursor: 'pointer',
+                        color: '#94a3b8', fontSize: 'var(--fs-sm)',
+                        fontFamily: 'Hind Siliguri, sans-serif',
                       }}>
-                      <Clipboard size={12} /> পেস্ট
+                      <Clipboard size={14} /> পেস্ট
                     </motion.button>
                     <motion.button whileTap={{ scale: 0.95 }} onClick={handleSample}
                       style={{
                         display: 'flex', alignItems: 'center', gap: 5,
-                        background: 'rgba(22,163,74,0.08)', border: '1px solid rgba(22,163,74,0.2)',
-                        borderRadius: 8, padding: '5px 10px', cursor: 'pointer',
-                        color: '#4ade80', fontSize: 12, fontFamily: 'Hind Siliguri',
+                        background: 'rgba(22,163,74,0.08)',
+                        border: '1px solid rgba(22,163,74,0.2)',
+                        borderRadius: 8, padding: '6px 12px', cursor: 'pointer',
+                        color: '#4ade80', fontSize: 'var(--fs-sm)',
+                        fontFamily: 'Hind Siliguri, sans-serif',
                       }}>
                       নমুনা দেখুন
                     </motion.button>
@@ -219,17 +244,20 @@ export default function App() {
                   onChange={e => setRawText(e.target.value)}
                   placeholder="এখানে আপনার BPDB/DESCO/REB প্রিপেইড টোকেন SMS বা বার্তাটি পেস্ট করুন..."
                   style={{
-                    width: '100%', minHeight: 160,
+                    width: '100%', minHeight: 'clamp(130px,25vw,180px)',
                     background: 'rgba(8,38,61,0.9)',
                     border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: 12, padding: '12px 14px',
-                    color: '#e2e8f0', fontSize: 13, lineHeight: 1.7,
+                    borderRadius: 12,
+                    padding: 'clamp(10px,2vw,14px) clamp(12px,2.5vw,16px)',
+                    color: '#e2e8f0',
+                    fontSize: 'var(--fs-base)',
+                    lineHeight: 1.7,
                     fontFamily: 'Hind Siliguri, JetBrains Mono, sans-serif',
                     resize: 'vertical', outline: 'none',
                     transition: 'border-color 0.25s',
                   }}
                   onFocus={e => e.target.style.borderColor = 'rgba(22,163,74,0.5)'}
-                  onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+                  onBlur={e  => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
                 />
               </div>
 
@@ -241,51 +269,55 @@ export default function App() {
                   width: '100%',
                   background: 'linear-gradient(135deg,#15803d,#16a34a)',
                   border: 'none', borderRadius: 14,
-                  padding: '15px 24px',
+                  padding: 'clamp(13px,2.5vw,17px) 24px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                  color: '#fff', fontWeight: 700, fontSize: 16,
+                  color: '#fff', fontWeight: 700,
+                  fontSize: 'var(--fs-md)',
                   fontFamily: 'Hind Siliguri, sans-serif',
                   cursor: 'pointer', letterSpacing: '0.02em',
                 }}
               >
-                <Zap size={18} />
+                <Zap size={20} />
                 টোকেন বিশ্লেষণ করুন
               </motion.button>
             </motion.div>
           )}
 
+          {/* TOKEN VIEW SCREEN */}
           {parsed && (
             <motion.div
               key="tokens"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.38 }}
             >
               {/* Reset button */}
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 onClick={handleReset}
                 style={{
-                  display: 'flex', alignItems: 'center', gap: 6,
-                  background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: 10, padding: '7px 14px',
-                  color: '#94a3b8', fontSize: 12, cursor: 'pointer',
-                  fontFamily: 'Hind Siliguri', marginBottom: 20,
+                  display: 'flex', alignItems: 'center', gap: 7,
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 10,
+                  padding: 'clamp(7px,1.5vw,10px) clamp(12px,2.5vw,18px)',
+                  color: '#94a3b8',
+                  fontSize: 'var(--fs-sm)',
+                  cursor: 'pointer',
+                  fontFamily: 'Hind Siliguri, sans-serif',
+                  marginBottom: 22,
                 }}
               >
-                <RefreshCw size={13} /> নতুন বার্তা
+                <RefreshCw size={14} /> নতুন বার্তা দিন
               </motion.button>
 
-              {/* Meta panel */}
-              {meta && <MetaPanel meta={meta} />}
-
-              {/* Progress */}
+              {/* Progress bar */}
               {!allDone && tokens.length > 1 && (
                 <ProgressBar done={doneCount} total={tokens.length} />
               )}
 
-              {/* Token cards or success */}
+              {/* ── Token cards or success ── */}
               {allDone ? (
                 <SuccessScreen total={tokens.length} onReset={handleReset} />
               ) : (
@@ -304,25 +336,62 @@ export default function App() {
                   ))}
                 </div>
               )}
+
+              {/* ── Billing info — BELOW tokens ── */}
+              {meta && !allDone && (
+                <div style={{ marginTop: 28 }}>
+                  <MetaPanel meta={meta} />
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Footer */}
+        {/* ── FOOTER ── */}
         <motion.footer
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 0.8 }}
           style={{
             textAlign: 'center', marginTop: 48,
-            paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.05)',
+            paddingTop: 24,
+            borderTop: '1px solid rgba(255,255,255,0.05)',
           }}
         >
-          <p style={{ fontSize: 11, color: '#334155', fontFamily: 'Hind Siliguri' }}>
+          <p style={{
+            fontSize: 'var(--fs-sm)', color: '#475569',
+            fontFamily: 'Hind Siliguri, sans-serif',
+            marginBottom: 6,
+          }}>
             BPDB প্রিপেইড টোকেন সহায়ক • অনানুষ্ঠানিক টুল
           </p>
-          <p style={{ fontSize: 10, color: '#1e293b', marginTop: 4 }}>
-            Made with ⚡ for Bangladeshi electricity consumers
+          <p style={{
+            fontSize: 'var(--fs-sm)', color: '#334155',
+            fontFamily: 'Hind Siliguri, sans-serif',
+          }}>
+            Made with ❤️ by{' '}
+            <a
+              href="https://hafizsakib.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: '#22c55e',
+                textDecoration: 'none',
+                fontWeight: 700,
+                borderBottom: '1px solid rgba(22,163,74,0.4)',
+                transition: 'color 0.2s, border-color 0.2s',
+              }}
+              onMouseEnter={e => {
+                e.target.style.color = '#86efac';
+                e.target.style.borderBottomColor = 'rgba(134,239,172,0.6)';
+              }}
+              onMouseLeave={e => {
+                e.target.style.color = '#22c55e';
+                e.target.style.borderBottomColor = 'rgba(22,163,74,0.4)';
+              }}
+            >
+              Mohammad Hafizur Rahman Sakib
+            </a>
           </p>
         </motion.footer>
       </div>
