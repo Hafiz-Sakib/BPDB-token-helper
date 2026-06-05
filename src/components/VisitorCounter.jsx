@@ -2,50 +2,39 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Users } from "lucide-react";
 
-// Uses countapi.xyz - free public hit counter, no auth needed
-// Namespace: bpdb-token-helper, key: visitors
-const NAMESPACE = "bpdb-token-helper";
-const KEY = "unique-visitors-v1";
+// counterapi.dev V1 — no auth, no signup, free, CORS-friendly
+// Namespace: bpdb-token-helper | Counter: visitors
+const API_UP = "https://api.counterapi.dev/v1/bpdb-token-helper/visitors/up";
+const API_GET = "https://api.counterapi.dev/v1/bpdb-token-helper/visitors";
 
 export default function VisitorCounter() {
   const [count, setCount] = useState(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    // Only hit the counter once per session so refreshes don't inflate count
     const alreadyCounted = sessionStorage.getItem("bpdb_counted");
-
-    const fetchCount = async () => {
+    (async () => {
       try {
-        if (!alreadyCounted) {
-          // Increment on first visit this session
-          const res = await fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`);
-          const data = await res.json();
-          setCount(data.value);
-          sessionStorage.setItem("bpdb_counted", "1");
-        } else {
-          // Just read current value
-          const res = await fetch(`https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`);
-          const data = await res.json();
-          setCount(data.value);
-        }
+        const url = alreadyCounted ? API_GET : API_UP;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        setCount(data.count ?? data.value ?? 0);
+        if (!alreadyCounted) sessionStorage.setItem("bpdb_counted", "1");
       } catch {
         setError(true);
       }
-    };
-
-    fetchCount();
+    })();
   }, []);
 
   if (error || count === null) return null;
-
-  const formatted = count?.toLocaleString("bn-BD") ?? "০";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.6, duration: 0.4 }}
+      title="মোট ভিজিটর"
       style={{
         position: "fixed",
         top: 14,
@@ -54,41 +43,46 @@ export default function VisitorCounter() {
         display: "flex",
         alignItems: "center",
         gap: 6,
-        background: "rgba(7,36,58,0.85)",
-        border: "1px solid rgba(22,163,74,0.25)",
+        background: "rgba(7,36,58,0.88)",
+        border: "1px solid rgba(22,163,74,0.28)",
         borderRadius: 24,
         padding: "5px 12px 5px 8px",
-        backdropFilter: "blur(10px)",
+        backdropFilter: "blur(12px)",
         cursor: "default",
+        boxShadow: "0 2px 16px rgba(0,0,0,0.4)",
       }}
-      title="মোট ভিজিটর"
     >
+      {/* Pulsing icon */}
       <motion.div
-        animate={{ scale: [1, 1.15, 1] }}
-        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+        animate={{ scale: [1, 1.18, 1] }}
+        transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
         style={{
-          width: 22,
-          height: 22,
+          width: 24,
+          height: 24,
           borderRadius: "50%",
-          background: "rgba(22,163,74,0.15)",
+          background: "rgba(22,163,74,0.18)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          flexShrink: 0,
         }}
       >
-        <Users size={12} color="#22c55e" />
+        <Users size={13} color="#22c55e" />
       </motion.div>
-      <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
+
+      <div
+        style={{ display: "flex", flexDirection: "column", lineHeight: 1.15 }}
+      >
         <span
           style={{
             fontFamily: "Barlow Condensed, sans-serif",
             fontWeight: 700,
-            fontSize: 13,
+            fontSize: 14,
             color: "#22c55e",
             letterSpacing: "0.04em",
           }}
         >
-          {count?.toLocaleString()}
+          {count.toLocaleString()}
         </span>
         <span
           style={{
@@ -96,7 +90,7 @@ export default function VisitorCounter() {
             fontSize: 9,
             color: "#475569",
             textTransform: "uppercase",
-            letterSpacing: "0.08em",
+            letterSpacing: "0.1em",
           }}
         >
           ভিজিটর
