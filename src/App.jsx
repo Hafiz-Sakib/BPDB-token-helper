@@ -9,6 +9,7 @@ import VisitorCounter from "./components/VisitorCounter";
 export default function App() {
   return (
     <BrowserRouter>
+      <VisitorCounter />
       <div
         style={{
           minHeight: "100vh",
@@ -42,7 +43,6 @@ export default function App() {
             backgroundSize: "72px 72px",
           }}
         />
-        <VisitorCounter />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/tokens" element={<TokensPage />} />
