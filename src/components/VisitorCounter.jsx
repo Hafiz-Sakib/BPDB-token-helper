@@ -41,7 +41,7 @@ export default function VisitorCounter() {
 
   const badge = (
     <motion.div
-      initial={{ opacity: 0, y: -16 }}
+      initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4, duration: 0.35 }}
       title="মোট ভিজিটর"
@@ -50,73 +50,80 @@ export default function VisitorCounter() {
         top: 14,
         right: 14,
         zIndex: 9999,
-        display: "flex",
+        display: "inline-flex",
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
-        background: "rgba(4,24,42,0.92)",
+        gap: 9,
+        background: "rgba(4,24,42,0.93)",
         border: "1px solid rgba(22,163,74,0.35)",
         borderRadius: 10,
-        padding: "8px 12px",
+        padding: "9px 14px 9px 12px",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
         boxShadow:
-          "0 4px 24px rgba(0,0,0,0.55), 0 0 0 1px rgba(22,163,74,0.07), inset 0 1px 0 rgba(255,255,255,0.04)",
+          "0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)",
         cursor: "default",
         userSelect: "none",
+        boxSizing: "border-box",
       }}
     >
-      {/* Pulse dot */}
-      <div style={{ position: "relative", width: 8, height: 8, flexShrink: 0 }}>
+      {/* Live pulse dot — steady glow, no blink */}
+      <div
+        style={{
+          position: "relative",
+          width: 10,
+          height: 10,
+          flexShrink: 0,
+          alignSelf: "center",
+        }}
+      >
         <motion.div
-          animate={{ scale: [1, 2.4, 1], opacity: [0.6, 0, 0.6] }}
-          transition={{ repeat: Infinity, duration: 2.6, ease: "easeOut" }}
+          animate={{ scale: [1, 2.0, 1], opacity: [0.5, 0, 0.5] }}
+          transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
           style={{
             position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
+            inset: 0,
             borderRadius: "50%",
-            background: "rgba(22,163,74,0.5)",
+            background: "rgba(22,163,74,0.4)",
           }}
         />
         <div
           style={{
-            width: 8,
-            height: 8,
+            position: "absolute",
+            inset: 0,
             borderRadius: "50%",
             background: "#22c55e",
           }}
         />
       </div>
 
-      {/* Text block */}
+      {/* Number + label */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          gap: 1,
+          flexShrink: 0,
         }}
       >
         <span
           style={{
-            fontFamily: "Hind Siliguri, sans-serif",
+            fontFamily: "'Hind Siliguri', sans-serif",
             fontWeight: 700,
-            fontSize: 15,
-            lineHeight: 1,
+            fontSize: 17,
+            lineHeight: "20px",
             color: "#22c55e",
+            whiteSpace: "nowrap",
           }}
         >
           {count.toLocaleString()}
         </span>
         <span
           style={{
-            fontFamily: "Hind Siliguri, sans-serif",
+            fontFamily: "'Hind Siliguri', sans-serif",
             fontWeight: 500,
-            fontSize: 10,
-            lineHeight: 1,
+            fontSize: 11,
+            lineHeight: "14px",
             color: "#4a7a5a",
             whiteSpace: "nowrap",
           }}
@@ -126,7 +133,12 @@ export default function VisitorCounter() {
       </div>
 
       {/* Icon */}
-      <Users size={14} color="rgba(34,197,94,0.5)" strokeWidth={2} />
+      <Users
+        size={16}
+        color="rgba(34,197,94,0.45)"
+        strokeWidth={2}
+        style={{ flexShrink: 0, alignSelf: "center" }}
+      />
     </motion.div>
   );
 

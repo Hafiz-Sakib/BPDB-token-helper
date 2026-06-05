@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { Zap, Clipboard, Binary } from "lucide-react";
 import HowToPanel from "../components/HowToPanel";
 import { parseMessage } from "../utils/parseMessage";
+import VisitorCounter from "../components/VisitorCounter";
 
 const SAMPLE = `Successful!Your BPDBprepaid
 Prepaid Token is
@@ -64,7 +65,9 @@ export default function HomePage() {
   };
 
   return (
-    <div
+    <>
+      <VisitorCounter />
+      <div
       style={{
         position: "relative",
         zIndex: 1,
@@ -381,5 +384,6 @@ export default function HomePage() {
         </p>
       </motion.footer>
     </div>
+    </>
   );
 }

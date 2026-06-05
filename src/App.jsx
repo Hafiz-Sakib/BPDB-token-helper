@@ -4,12 +4,9 @@ import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/HomePage";
 import TokensPage from "./pages/TokensPage";
 import MeterCodesPage from "./pages/MeterCodesPage";
-import VisitorCounter from "./components/VisitorCounter";
-
 export default function App() {
   return (
     <BrowserRouter>
-      <VisitorCounter />
       <div
         style={{
           minHeight: "100vh",
