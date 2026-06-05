@@ -1,4 +1,4 @@
-# ⚡ BPDB প্রিপেইড টোকেন সহায়ক
+# ⚡ BPDB প্রিপেইড টোকেন Helper
 
 A React web app that helps Bangladeshi prepaid electricity meter users easily enter their 20-digit tokens one by one — without losing track.
 
@@ -33,6 +33,7 @@ A React web app that helps Bangladeshi prepaid electricity meter users easily en
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 16+ and npm
 
 ### Install & Run
@@ -67,11 +68,11 @@ npm run build
 
 ## 🔑 Meter Display Guide
 
-| Display | Meaning |
-|---|---|
-| `GOOD` / `SUCCESS` | Token accepted ✅ |
-| `REJECT` | Re-enter carefully ❌ |
-| `REPLACE` | Token already used — skip |
+| Display            | Meaning                   |
+| ------------------ | ------------------------- |
+| `GOOD` / `SUCCESS` | Token accepted ✅         |
+| `REJECT`           | Re-enter carefully ❌     |
+| `REPLACE`          | Token already used — skip |
 
 - Press **889 + Enter** on meter to check current Token Sequence Number (TSN)
 - Always enter tokens **in order** (SqNo 1 → 2 → 3 …)
@@ -82,13 +83,13 @@ npm run build
 
 Access from the **"মিটার এর শর্ট কোড দেখুন"** button on the home page.
 
-| Code | Info |
-|---|---|
-| `800` | Total energy consumed |
-| `801` | Current balance (BDT) |
-| `804` | Meter serial number |
-| `810` | Emergency credit balance |
-| `811` | Activate emergency credit |
+| Code  | Info                          |
+| ----- | ----------------------------- |
+| `800` | Total energy consumed         |
+| `801` | Current balance (BDT)         |
+| `804` | Meter serial number           |
+| `810` | Emergency credit balance      |
+| `811` | Activate emergency credit     |
 | `889` | Current Token Sequence Number |
 
 …and 30+ more codes available in the app.
@@ -97,16 +98,17 @@ Access from the **"মিটার এর শর্ট কোড দেখুন
 
 ## 🛠 Tech Stack
 
-| Package | Version | Purpose |
-|---|---|---|
-| React | 18 | UI framework |
-| React Router | 6 | Page routing |
-| Framer Motion | latest | Animations |
-| react-hot-toast | latest | Notifications |
-| lucide-react | latest | Icons |
-| counterapi.dev | — | Visitor counter API |
+| Package         | Version | Purpose             |
+| --------------- | ------- | ------------------- |
+| React           | 18      | UI framework        |
+| React Router    | 6       | Page routing        |
+| Framer Motion   | latest  | Animations          |
+| react-hot-toast | latest  | Notifications       |
+| lucide-react    | latest  | Icons               |
+| counterapi.dev  | —       | Visitor counter API |
 
 ### Fonts (Google Fonts)
+
 - **Hind Siliguri** — Bengali & body text
 - **Barlow Condensed** — Display labels / visitor counter
 - **JetBrains Mono** — Token digit groups
