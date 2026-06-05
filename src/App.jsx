@@ -1,14 +1,14 @@
-import React, { useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Toaster, toast } from 'react-hot-toast';
-import { Zap, Clipboard, RefreshCw } from 'lucide-react';
+import React, { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Toaster, toast } from "react-hot-toast";
+import { Zap, Clipboard, RefreshCw } from "lucide-react";
 
-import { parseMessage } from './utils/parseMessage';
-import TokenCard from './components/TokenCard';
-import MetaPanel from './components/MetaPanel';
-import ProgressBar from './components/ProgressBar';
-import HowToPanel from './components/HowToPanel';
-import SuccessScreen from './components/SuccessScreen';
+import { parseMessage } from "./utils/parseMessage";
+import TokenCard from "./components/TokenCard";
+import MetaPanel from "./components/MetaPanel";
+import ProgressBar from "./components/ProgressBar";
+import HowToPanel from "./components/HowToPanel";
+import SuccessScreen from "./components/SuccessScreen";
 
 const SAMPLE = `Successful!Your BPDBprepaid
 Prepaid Token is
@@ -21,28 +21,32 @@ Charge:168,VAT:95.24,Rebate:-9.23.`;
 
 /* ─── Shared style tokens ─────────────────────────────────── */
 const card = {
-  background: 'var(--card)',
-  border: '1px solid rgba(255,255,255,0.06)',
+  background: "var(--card)",
+  border: "1px solid rgba(255,255,255,0.06)",
   borderRadius: 20,
 };
 
 export default function App() {
-  const [rawText,  setRawText]  = useState('');
-  const [tokens,   setTokens]   = useState([]);
-  const [meta,     setMeta]     = useState(null);
-  const [doneSet,  setDoneSet]  = useState(new Set());
-  const [activeIdx,setActiveIdx]= useState(0);
-  const [parsed,   setParsed]   = useState(false);
-  const [allDone,  setAllDone]  = useState(false);
+  const [rawText, setRawText] = useState("");
+  const [tokens, setTokens] = useState([]);
+  const [meta, setMeta] = useState(null);
+  const [doneSet, setDoneSet] = useState(new Set());
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [parsed, setParsed] = useState(false);
+  const [allDone, setAllDone] = useState(false);
 
   const handleParse = useCallback(() => {
     if (!rawText.trim()) {
-      toast.error('বার্তা খালি! কপি করা SMS বা টোকেন বার্তা পেস্ট করুন।');
+      toast.error(
+        "এসএমএস বক্স ফাঁকা ! কপি করা SMS বা টোকেন বার্তা পেস্ট করুন।",
+      );
       return;
     }
     const result = parseMessage(rawText);
     if (result.tokens.length === 0) {
-      toast.error('কোনো টোকেন খুঁজে পাওয়া যায়নি। বার্তাটি পুনরায় চেক করুন।');
+      toast.error(
+        "আপনার পেস্ট করা মেসেজ থেকে কোনো টোকেন খুঁজে পাওয়া যায়নি। আবার চেষ্টা করুন!",
+      );
       return;
     }
     setTokens(result.tokens);
@@ -51,22 +55,24 @@ export default function App() {
     setActiveIdx(0);
     setAllDone(false);
     setParsed(true);
-    toast.success(`${result.tokens.length}টি টোকেন পাওয়া গেছে!`, { icon: '⚡' });
+    toast.success(`${result.tokens.length}টি টোকেন পাওয়া গেছে!`, {
+      icon: "⚡",
+    });
   }, [rawText]);
 
   const handlePaste = async () => {
     try {
       const text = await navigator.clipboard.readText();
       setRawText(text);
-      toast.success('ক্লিপবোর্ড থেকে পেস্ট হয়েছে');
+      toast.success("ক্লিপবোর্ড থেকে পেস্ট হয়েছে");
     } catch {
-      toast.error('ক্লিপবোর্ড অ্যাক্সেস করা যায়নি। ম্যানুয়ালি পেস্ট করুন।');
+      toast.error("ক্লিপবোর্ড অ্যাক্সেস করা যায়নি। ম্যানুয়ালি পেস্ট করুন।");
     }
   };
 
   const handleSample = () => {
     setRawText(SAMPLE);
-    toast('নমুনা বার্তা লোড হয়েছে', { icon: '📋' });
+    toast("স্যাম্পল এসএমএস লোড হয়েছে", { icon: "📋" });
   };
 
   const handleMarkDone = (idx) => {
@@ -75,111 +81,162 @@ export default function App() {
     setDoneSet(next);
     if (next.size === tokens.length) {
       setAllDone(true);
-      toast.success('সব টোকেন সম্পন্ন! 🎉', { duration: 4000 });
+      toast.success("সব টোকেন দেওয়া হয়েছে! 🎉", { duration: 4000 });
     } else {
       const nextActive = idx + 1 < tokens.length ? idx + 1 : idx;
       setActiveIdx(nextActive);
-      toast(`টোকেন ${idx + 1} সম্পন্ন ✓`, { icon: '✅' });
+      toast(`টোকেন ${idx + 1} দেওয়া কমপ্লিট ✓`, { icon: "✅" });
     }
   };
 
   const handleReset = () => {
-    setParsed(false); setTokens([]); setMeta(null);
-    setDoneSet(new Set()); setActiveIdx(0);
-    setAllDone(false); setRawText('');
+    setParsed(false);
+    setTokens([]);
+    setMeta(null);
+    setDoneSet(new Set());
+    setActiveIdx(0);
+    setAllDone(false);
+    setRawText("");
   };
 
   const doneCount = doneSet.size;
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: `
+    <div
+      style={{
+        minHeight: "100vh",
+        background: `
         radial-gradient(ellipse 70% 55% at 20% -5%, rgba(30,58,138,0.35) 0%, transparent 65%),
         radial-gradient(ellipse 60% 50% at 80% 10%, rgba(22,163,74,0.18) 0%, transparent 60%),
         linear-gradient(180deg, #001020 0%, #001b2a 100%)
       `,
-      paddingBottom: 60,
-      fontFamily: 'Hind Siliguri, sans-serif',
-    }}>
+        paddingBottom: 60,
+        fontFamily: "Hind Siliguri, sans-serif",
+      }}
+    >
       <Toaster
         position="top-center"
         toastOptions={{
           style: {
-            background: '#07243a',
-            color: '#fff',
-            border: '1px solid rgba(22,163,74,0.3)',
-            fontFamily: 'Hind Siliguri, sans-serif',
-            fontSize: 'var(--fs-base)',
+            background: "#07243a",
+            color: "#fff",
+            border: "1px solid rgba(22,163,74,0.3)",
+            fontFamily: "Hind Siliguri, sans-serif",
+            fontSize: "var(--fs-base)",
           },
         }}
       />
 
       {/* Grid overlay */}
-      <div style={{
-        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
-        backgroundImage:
-          'linear-gradient(rgba(22,163,74,0.018) 1px, transparent 1px),' +
-          'linear-gradient(90deg, rgba(22,163,74,0.018) 1px, transparent 1px)',
-        backgroundSize: '72px 72px',
-      }} />
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          pointerEvents: "none",
+          zIndex: 0,
+          backgroundImage:
+            "linear-gradient(rgba(22,163,74,0.018) 1px, transparent 1px)," +
+            "linear-gradient(90deg, rgba(22,163,74,0.018) 1px, transparent 1px)",
+          backgroundSize: "72px 72px",
+        }}
+      />
 
       {/* Content wrapper — responsive max-width */}
-      <div style={{
-        position: 'relative', zIndex: 1,
-        maxWidth: 'min(680px, 96vw)',
-        margin: '0 auto',
-        padding: '0 clamp(12px, 3vw, 24px)',
-      }}>
-
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          maxWidth: "min(680px, 96vw)",
+          margin: "0 auto",
+          padding: "0 clamp(12px, 3vw, 24px)",
+        }}
+      >
         {/* ── HEADER ── */}
         <motion.header
           initial={{ opacity: 0, y: -24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          style={{ textAlign: 'center', padding: 'clamp(28px,5vw,48px) 0 clamp(20px,4vw,32px)' }}
+          style={{
+            textAlign: "center",
+            padding: "clamp(28px,5vw,48px) 0 clamp(20px,4vw,32px)",
+          }}
         >
           <motion.div
             animate={{ y: [0, -8, 0] }}
-            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-            style={{ fontSize: 'clamp(40px,8vw,58px)', marginBottom: 12, display: 'block', lineHeight: 1 }}
-          >⚡</motion.div>
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+            style={{
+              fontSize: "clamp(40px,8vw,58px)",
+              marginBottom: 12,
+              display: "block",
+              lineHeight: 1,
+            }}
+          >
+            ⚡
+          </motion.div>
 
-          <h1 style={{
-            fontFamily: 'Hind Siliguri, sans-serif',
-            fontWeight: 700,
-            fontSize: 'clamp(1.7rem, 6vw, 2.6rem)',
-            background: 'linear-gradient(135deg,#22c55e 0%,#16a34a 50%,#86efac 100%)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text', marginBottom: 8,
-            lineHeight: 1.2,
-          }}>
+          <h1
+            style={{
+              fontFamily: "Hind Siliguri, sans-serif",
+              fontWeight: 700,
+              fontSize: "clamp(1.7rem, 6vw, 2.6rem)",
+              background:
+                "linear-gradient(135deg,#22c55e 0%,#16a34a 50%,#86efac 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              marginBottom: 8,
+              lineHeight: 1.2,
+            }}
+          >
             BPDB প্রিপেইড টোকেন
           </h1>
 
-          <p style={{
-            fontFamily: 'Hind Siliguri, sans-serif',
-            fontSize: 'var(--fs-base)',
-            color: '#64748b', lineHeight: 1.6,
-          }}>
-            টোকেন বার্তা পেস্ট করুন — সহজে একটি একটি করে দিন
+          <p
+            style={{
+              fontFamily: "Hind Siliguri, sans-serif",
+              fontSize: "var(--fs-base)",
+              color: "#64748b",
+              lineHeight: 1.6,
+            }}
+          >
+            টোকেন এর এসএমএস পেস্ট করুন — সহজে ২০ ডিজিট করে মিটারে ইনপুট দিন!
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              marginTop: 12,
+            }}
+          >
             <motion.div
-              animate={{ boxShadow: [
-                '0 0 0px rgba(22,163,74,0.4)',
-                '0 0 14px rgba(22,163,74,0.8)',
-                '0 0 0px rgba(22,163,74,0.4)',
-              ]}}
+              animate={{
+                boxShadow: [
+                  "0 0 0px rgba(22,163,74,0.4)",
+                  "0 0 14px rgba(22,163,74,0.8)",
+                  "0 0 0px rgba(22,163,74,0.4)",
+                ],
+              }}
               transition={{ repeat: Infinity, duration: 2 }}
-              style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e' }}
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: "#22c55e",
+              }}
             />
-            <span style={{
-              fontSize: 'var(--fs-xs)', color: '#475569',
-              textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 700,
-              fontFamily: 'Barlow Condensed, sans-serif',
-            }}>
+            <span
+              style={{
+                fontSize: "var(--fs-xs)",
+                color: "#475569",
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                fontWeight: 700,
+                fontFamily: "Barlow Condensed, sans-serif",
+              }}
+            >
               Bangladesh Power Development Board
             </span>
           </div>
@@ -187,7 +244,6 @@ export default function App() {
 
         {/* ── MAIN CONTENT ── */}
         <AnimatePresence mode="wait">
-
           {/* INPUT SCREEN */}
           {!parsed && (
             <motion.div
@@ -200,85 +256,132 @@ export default function App() {
               <HowToPanel />
 
               {/* Textarea card */}
-              <div style={{ ...card, padding: 'clamp(16px,3vw,22px)', marginBottom: 16 }}>
-                <div style={{
-                  display: 'flex', justifyContent: 'space-between',
-                  alignItems: 'center', marginBottom: 12,
-                  flexWrap: 'wrap', gap: 8,
-                }}>
-                  <span style={{
-                    fontFamily: 'Hind Siliguri, sans-serif', fontWeight: 700,
-                    fontSize: 'var(--fs-sm)',
-                    textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8',
-                  }}>
+              <div
+                style={{
+                  ...card,
+                  padding: "clamp(16px,3vw,22px)",
+                  marginBottom: 16,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 12,
+                    flexWrap: "wrap",
+                    gap: 8,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "Hind Siliguri, sans-serif",
+                      fontWeight: 700,
+                      fontSize: "var(--fs-sm)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                      color: "#94a3b8",
+                    }}
+                  >
                     টোকেন বার্তা পেস্ট করুন
                   </span>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <motion.button whileTap={{ scale: 0.95 }} onClick={handlePaste}
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handlePaste}
                       style={{
-                        display: 'flex', alignItems: 'center', gap: 5,
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: 8, padding: '6px 12px', cursor: 'pointer',
-                        color: '#94a3b8', fontSize: 'var(--fs-sm)',
-                        fontFamily: 'Hind Siliguri, sans-serif',
-                      }}>
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 5,
+                        background: "rgba(255,255,255,0.05)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        borderRadius: 8,
+                        padding: "6px 12px",
+                        cursor: "pointer",
+                        color: "#94a3b8",
+                        fontSize: "var(--fs-sm)",
+                        fontFamily: "Hind Siliguri, sans-serif",
+                      }}
+                    >
                       <Clipboard size={14} /> পেস্ট
                     </motion.button>
-                    <motion.button whileTap={{ scale: 0.95 }} onClick={handleSample}
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleSample}
                       style={{
-                        display: 'flex', alignItems: 'center', gap: 5,
-                        background: 'rgba(22,163,74,0.08)',
-                        border: '1px solid rgba(22,163,74,0.2)',
-                        borderRadius: 8, padding: '6px 12px', cursor: 'pointer',
-                        color: '#4ade80', fontSize: 'var(--fs-sm)',
-                        fontFamily: 'Hind Siliguri, sans-serif',
-                      }}>
-                      নমুনা দেখুন
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 5,
+                        background: "rgba(22,163,74,0.08)",
+                        border: "1px solid rgba(22,163,74,0.2)",
+                        borderRadius: 8,
+                        padding: "6px 12px",
+                        cursor: "pointer",
+                        color: "#4ade80",
+                        fontSize: "var(--fs-sm)",
+                        fontFamily: "Hind Siliguri, sans-serif",
+                      }}
+                    >
+                      স্যাম্পল দেখুন !
                     </motion.button>
                   </div>
                 </div>
 
                 <textarea
                   value={rawText}
-                  onChange={e => setRawText(e.target.value)}
-                  placeholder="এখানে আপনার BPDB/DESCO/REB প্রিপেইড টোকেন SMS বা বার্তাটি পেস্ট করুন..."
+                  onChange={(e) => setRawText(e.target.value)}
+                  placeholder="এখানে আপনার BPDB/DESCO/REB প্রিপেইড টোকেন এসএমএস টা পেস্ট করুন..."
                   style={{
-                    width: '100%', minHeight: 'clamp(130px,25vw,180px)',
-                    background: 'rgba(8,38,61,0.9)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    width: "100%",
+                    minHeight: "clamp(130px,25vw,180px)",
+                    background: "rgba(8,38,61,0.9)",
+                    border: "1px solid rgba(255,255,255,0.08)",
                     borderRadius: 12,
-                    padding: 'clamp(10px,2vw,14px) clamp(12px,2.5vw,16px)',
-                    color: '#e2e8f0',
-                    fontSize: 'var(--fs-base)',
+                    padding: "clamp(10px,2vw,14px) clamp(12px,2.5vw,16px)",
+                    color: "#e2e8f0",
+                    fontSize: "var(--fs-base)",
                     lineHeight: 1.7,
-                    fontFamily: 'Hind Siliguri, JetBrains Mono, sans-serif',
-                    resize: 'vertical', outline: 'none',
-                    transition: 'border-color 0.25s',
+                    fontFamily: "Hind Siliguri, JetBrains Mono, sans-serif",
+                    resize: "vertical",
+                    outline: "none",
+                    transition: "border-color 0.25s",
                   }}
-                  onFocus={e => e.target.style.borderColor = 'rgba(22,163,74,0.5)'}
-                  onBlur={e  => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+                  onFocus={(e) =>
+                    (e.target.style.borderColor = "rgba(22,163,74,0.5)")
+                  }
+                  onBlur={(e) =>
+                    (e.target.style.borderColor = "rgba(255,255,255,0.08)")
+                  }
                 />
               </div>
 
               <motion.button
-                whileHover={{ scale: 1.02, boxShadow: '0 8px 32px rgba(22,163,74,0.5)' }}
+                whileHover={{
+                  scale: 1.02,
+                  boxShadow: "0 8px 32px rgba(22,163,74,0.5)",
+                }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleParse}
                 style={{
-                  width: '100%',
-                  background: 'linear-gradient(135deg,#15803d,#16a34a)',
-                  border: 'none', borderRadius: 14,
-                  padding: 'clamp(13px,2.5vw,17px) 24px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                  color: '#fff', fontWeight: 700,
-                  fontSize: 'var(--fs-md)',
-                  fontFamily: 'Hind Siliguri, sans-serif',
-                  cursor: 'pointer', letterSpacing: '0.02em',
+                  width: "100%",
+                  background: "linear-gradient(135deg,#15803d,#16a34a)",
+                  border: "none",
+                  borderRadius: 14,
+                  padding: "clamp(13px,2.5vw,17px) 24px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 10,
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: "var(--fs-md)",
+                  fontFamily: "Hind Siliguri, sans-serif",
+                  cursor: "pointer",
+                  letterSpacing: "0.02em",
                 }}
               >
                 <Zap size={20} />
-                টোকেন বিশ্লেষণ করুন
+                টোকেন আলাদা করুন!
               </motion.button>
             </motion.div>
           )}
@@ -297,19 +400,21 @@ export default function App() {
                 whileTap={{ scale: 0.97 }}
                 onClick={handleReset}
                 style={{
-                  display: 'flex', alignItems: 'center', gap: 7,
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 7,
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
                   borderRadius: 10,
-                  padding: 'clamp(7px,1.5vw,10px) clamp(12px,2.5vw,18px)',
-                  color: '#94a3b8',
-                  fontSize: 'var(--fs-sm)',
-                  cursor: 'pointer',
-                  fontFamily: 'Hind Siliguri, sans-serif',
+                  padding: "clamp(7px,1.5vw,10px) clamp(12px,2.5vw,18px)",
+                  color: "#94a3b8",
+                  fontSize: "var(--fs-sm)",
+                  cursor: "pointer",
+                  fontFamily: "Hind Siliguri, sans-serif",
                   marginBottom: 22,
                 }}
               >
-                <RefreshCw size={14} /> নতুন বার্তা দিন
+                <RefreshCw size={14} /> নতুন এসএমএস দিন
               </motion.button>
 
               {/* Progress bar */}
@@ -321,7 +426,9 @@ export default function App() {
               {allDone ? (
                 <SuccessScreen total={tokens.length} onReset={handleReset} />
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 12 }}
+                >
                   {tokens.map((token, i) => (
                     <TokenCard
                       key={i}
@@ -353,41 +460,48 @@ export default function App() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
           style={{
-            textAlign: 'center', marginTop: 48,
+            textAlign: "center",
+            marginTop: 48,
             paddingTop: 24,
-            borderTop: '1px solid rgba(255,255,255,0.05)',
+            borderTop: "1px solid rgba(255,255,255,0.05)",
           }}
         >
-          <p style={{
-            fontSize: 'var(--fs-sm)', color: '#475569',
-            fontFamily: 'Hind Siliguri, sans-serif',
-            marginBottom: 6,
-          }}>
-            BPDB প্রিপেইড টোকেন সহায়ক • অনানুষ্ঠানিক টুল
+          <p
+            style={{
+              fontSize: "var(--fs-sm)",
+              color: "#475569",
+              fontFamily: "Hind Siliguri, sans-serif",
+              marginBottom: 6,
+            }}
+          >
+            • BPDB প্রিপেইড টোকেন হেল্পার • সহজে টোকেন মিটারে ইনপুট দিন •
           </p>
-          <p style={{
-            fontSize: 'var(--fs-sm)', color: '#334155',
-            fontFamily: 'Hind Siliguri, sans-serif',
-          }}>
-            Made with ❤️ by{' '}
+          <p
+            style={{
+              fontSize: "var(--fs-sm)",
+              color: "#334155",
+              fontFamily: "Hind Siliguri, sans-serif",
+            }}
+          >
+            Made with ❤️ by{" "}
             <a
               href="https://hafizsakib.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                color: '#22c55e',
-                textDecoration: 'none',
+                color: "#22c55e",
+                textDecoration: "none",
                 fontWeight: 700,
-                borderBottom: '1px solid rgba(22,163,74,0.4)',
-                transition: 'color 0.2s, border-color 0.2s',
+                borderBottom: "1px solid rgba(22,163,74,0.4)",
+                transition: "color 0.2s, border-color 0.2s",
               }}
-              onMouseEnter={e => {
-                e.target.style.color = '#86efac';
-                e.target.style.borderBottomColor = 'rgba(134,239,172,0.6)';
+              onMouseEnter={(e) => {
+                e.target.style.color = "#86efac";
+                e.target.style.borderBottomColor = "rgba(134,239,172,0.6)";
               }}
-              onMouseLeave={e => {
-                e.target.style.color = '#22c55e';
-                e.target.style.borderBottomColor = 'rgba(22,163,74,0.4)';
+              onMouseLeave={(e) => {
+                e.target.style.color = "#22c55e";
+                e.target.style.borderBottomColor = "rgba(22,163,74,0.4)";
               }}
             >
               Mohammad Hafizur Rahman Sakib
