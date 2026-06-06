@@ -255,7 +255,7 @@ export default function TokenCard({
                 opacity: isActive ? 1 : 0.35,
               }}
             >
-              ✓ দেওয়া হয়েছে ! <ChevronRight size={11} />
+              ✓ দেওয়া হলে ক্লিক ! <ChevronRight size={11} />
             </motion.button>
           )}
         </div>
@@ -338,14 +338,14 @@ export default function TokenCard({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.28 }}
           style={{
-            marginTop: 8,
+            marginTop: 20,
             fontSize: "0.75rem",
-            color: "#334155",
+            color: "#DC2626",
             fontFamily: "Hind Siliguri, sans-serif",
             lineHeight: 1.4,
           }}
         >
-          🔒 টোকেনগুলো সিরিয়াল মেনে দিন !
+          🔒 টোকেনগুলো সিরিয়াল অনুযায়ী দিন !
         </motion.p>
       )}
     </motion.div>
