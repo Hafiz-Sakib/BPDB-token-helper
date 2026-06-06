@@ -28,24 +28,17 @@ export default function HomePage() {
 
   const handleParse = () => {
     if (!rawText.trim()) {
-      toast.error(
-        "এসএমএস বক্স ফাঁকা ! কপি করা SMS বা টোকেন বার্তা পেস্ট করুন।",
-      );
+      toast.error("এসএমএস বক্স ফাঁকা ! কপি করা SMS বা টোকেন বার্তা পেস্ট করুন।");
       return;
     }
     const result = parseMessage(rawText);
     if (result.tokens.length === 0) {
-      toast.error(
-        "আপনার পেস্ট করা মেসেজ থেকে কোনো টোকেন খুঁজে পাওয়া যায়নি। আবার চেষ্টা করুন!",
-      );
+      toast.error("আপনার পেস্ট করা মেসেজ থেকে কোনো টোকেন খুঁজে পাওয়া যায়নি। আবার চেষ্টা করুন!");
       return;
     }
-    // Store parsed data in sessionStorage to pass to tokens page
     sessionStorage.setItem("bpdb_tokens", JSON.stringify(result.tokens));
     sessionStorage.setItem("bpdb_meta", JSON.stringify(result.meta));
-    toast.success(`${result.tokens.length} টি টোকেন আলাদা করা হয়েছে!`, {
-      icon: "⚡",
-    });
+    toast.success(`${result.tokens.length} টি টোকেন আলাদা করা হয়েছে!`, { icon: "⚡" });
     navigate("/tokens");
   };
 
@@ -65,9 +58,7 @@ export default function HomePage() {
   };
 
   return (
-    <>
-      <VisitorCounter />
-      <div
+    <div
       style={{
         position: "relative",
         zIndex: 1,
@@ -84,8 +75,21 @@ export default function HomePage() {
         style={{
           textAlign: "center",
           padding: "clamp(28px,5vw,48px) 0 clamp(20px,4vw,32px)",
+          position: "relative",
         }}
       >
+        {/* VISITOR BADGE — top-right of header, hardcoded */}
+        <div
+          style={{
+            position: "absolute",
+            top: "clamp(12px, 3vw, 18px)",
+            right: 0,
+            zIndex: 10,
+          }}
+        >
+          <VisitorCounter />
+        </div>
+
         <motion.div
           animate={{ y: [0, -8, 0] }}
           transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
@@ -104,8 +108,7 @@ export default function HomePage() {
             fontFamily: "Hind Siliguri, sans-serif",
             fontWeight: 700,
             fontSize: "clamp(1.7rem, 6vw, 2.6rem)",
-            background:
-              "linear-gradient(135deg,#22c55e 0%,#16a34a 50%,#86efac 100%)",
+            background: "linear-gradient(135deg,#22c55e 0%,#16a34a 50%,#86efac 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -175,9 +178,7 @@ export default function HomePage() {
       >
         <HowToPanel />
 
-        <div
-          style={{ ...card, padding: "clamp(16px,3vw,22px)", marginBottom: 16 }}
-        >
+        <div style={{ ...card, padding: "clamp(16px,3vw,22px)", marginBottom: 16 }}>
           <div
             style={{
               display: "flex",
@@ -262,20 +263,13 @@ export default function HomePage() {
               transition: "border-color 0.25s",
               boxSizing: "border-box",
             }}
-            onFocus={(e) =>
-              (e.target.style.borderColor = "rgba(22,163,74,0.5)")
-            }
-            onBlur={(e) =>
-              (e.target.style.borderColor = "rgba(255,255,255,0.08)")
-            }
+            onFocus={(e) => (e.target.style.borderColor = "rgba(22,163,74,0.5)")}
+            onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
           />
         </div>
 
         <motion.button
-          whileHover={{
-            scale: 1.02,
-            boxShadow: "0 8px 32px rgba(22,163,74,0.5)",
-          }}
+          whileHover={{ scale: 1.02, boxShadow: "0 8px 32px rgba(22,163,74,0.5)" }}
           whileTap={{ scale: 0.98 }}
           onClick={handleParse}
           style={{
@@ -384,6 +378,5 @@ export default function HomePage() {
         </p>
       </motion.footer>
     </div>
-    </>
   );
 }

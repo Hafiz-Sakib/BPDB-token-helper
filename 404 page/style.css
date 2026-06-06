@@ -1,0 +1,35 @@
+/*======================
+    404 page
+=======================*/
+
+.page_404 {
+  padding: 40px 0;
+  background: #fff;
+  font-family: "Arvo", serif;
+  display: flex; /* Use flexbox to center content vertically and horizontally */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+}
+
+.page_404 .four_zero_four_bg {
+  background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+  background-size: cover; /* Ensure the background image covers the entire container */
+  height: 400px;
+  width: 100%; /* Ensure the background image covers the entire width */
+  text-align: center; /* Center text horizontally within the background */
+}
+
+.page_404 h1,
+.page_404 h3 {
+  font-size: 80px;
+  margin: 0; /* Remove any default margin */
+}
+
+.link_404 {
+  color: #fff !important;
+  padding: 10px 20px;
+  background: #39ac31;
+  margin: 20px 0;
+  display: inline-block;
+  text-decoration: none; /* Remove underline from link */
+}

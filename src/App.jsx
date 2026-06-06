@@ -4,6 +4,8 @@ import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/HomePage";
 import TokensPage from "./pages/TokensPage";
 import MeterCodesPage from "./pages/MeterCodesPage";
+import NotFoundPage from "./pages/NotFoundPage";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -19,8 +21,10 @@ export default function App() {
           fontFamily: "Hind Siliguri, sans-serif",
         }}
       >
+        {/* Toast — offset from top so it never overlaps visitor badge on mobile */}
         <Toaster
           position="top-center"
+          containerStyle={{ top: 72 }}
           toastOptions={{
             style: {
               background: "#07243a",
@@ -28,12 +32,16 @@ export default function App() {
               border: "1px solid rgba(22,163,74,0.3)",
               fontFamily: "Hind Siliguri, sans-serif",
               fontSize: "var(--fs-base)",
+              maxWidth: "calc(100vw - 32px)",
             },
           }}
         />
         <div
           style={{
-            position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
+            position: "fixed",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 0,
             backgroundImage:
               "linear-gradient(rgba(22,163,74,0.018) 1px, transparent 1px)," +
               "linear-gradient(90deg, rgba(22,163,74,0.018) 1px, transparent 1px)",
@@ -44,6 +52,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/tokens" element={<TokensPage />} />
           <Route path="/meter-codes" element={<MeterCodesPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </BrowserRouter>
