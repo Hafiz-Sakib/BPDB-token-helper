@@ -179,10 +179,10 @@ export default function TokenCard({
               }}
             >
               {isDone
-                ? "✅ সম্পন্ন"
+                ? "✅ সঠিকভাবে দেওয়া হয়েছে"
                 : isActive
-                  ? "← এখন দিন"
-                  : `টোকেন ${index + 1} / ${total}`}
+                  ? "← এখন এই টোকেনটি দিন"
+                  : `টোকেন নং ${index + 1} / ${total}`}
             </div>
             {!isDone && !isActive && (
               <div style={{ fontSize: "0.72rem", color: "#334155" }}>
