@@ -4,7 +4,13 @@ import { Copy, Check, ChevronRight } from "lucide-react";
 import { formatToken } from "../utils/parseMessage";
 
 export default function TokenCard({
-  token, index, total, isActive, isDone, onDone, onActivate,
+  token,
+  index,
+  total,
+  isActive,
+  isDone,
+  onDone,
+  onActivate,
 }) {
   const [copied, setCopied] = useState(false);
   const [floaters, setFloaters] = useState([]);
@@ -29,18 +35,26 @@ export default function TokenCard({
 
   const borderColor = isDone
     ? "rgba(22,163,74,0.55)"
-    : isActive ? "rgba(244,197,66,0.55)" : "rgba(255,255,255,0.06)";
+    : isActive
+      ? "rgba(244,197,66,0.55)"
+      : "rgba(255,255,255,0.06)";
 
   const bgColor = isDone
     ? "rgba(22,163,74,0.10)"
-    : isActive ? "rgba(244,197,66,0.07)" : "rgba(7,36,58,0.95)";
+    : isActive
+      ? "rgba(244,197,66,0.07)"
+      : "rgba(7,36,58,0.95)";
 
   return (
     <motion.div
       layout
       initial={{ opacity: 0, y: 20, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.38, delay: index * 0.055, ease: [0.4, 0, 0.2, 1] }}
+      transition={{
+        duration: 0.38,
+        delay: index * 0.055,
+        ease: [0.4, 0, 0.2, 1],
+      }}
       onClick={() => !isDone && onActivate(index)}
       style={{
         position: "relative",
@@ -64,9 +78,14 @@ export default function TokenCard({
             exit={{}}
             transition={{ duration: 0.9, ease: "easeOut" }}
             style={{
-              position: "absolute", top: -10, right: 54,
-              fontSize: "0.78rem", fontWeight: 700, color: "#22c55e",
-              pointerEvents: "none", zIndex: 99,
+              position: "absolute",
+              top: -10,
+              right: 54,
+              fontSize: "0.78rem",
+              fontWeight: 700,
+              color: "#22c55e",
+              pointerEvents: "none",
+              zIndex: 99,
               fontFamily: "JetBrains Mono, monospace",
             }}
           >
@@ -82,36 +101,64 @@ export default function TokenCard({
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.35 }}
           style={{
-            position: "absolute", inset: 0, borderRadius: 16,
-            background: "rgba(22,163,74,0.04)", transformOrigin: "left",
+            position: "absolute",
+            inset: 0,
+            borderRadius: 16,
+            background: "rgba(22,163,74,0.04)",
+            transformOrigin: "left",
             pointerEvents: "none",
           }}
         />
       )}
 
       {/* ── Top row: badge/label + action buttons ── */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 12, gap: 8 }}>
-
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          marginBottom: 12,
+          gap: 8,
+        }}
+      >
         {/* Badge + label */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0, flexShrink: 1 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            minWidth: 0,
+            flexShrink: 1,
+          }}
+        >
           <motion.div
-            animate={isActive && !isDone ? {
-              boxShadow: [
-                "0 0 0px rgba(244,197,66,0.3)",
-                "0 0 14px rgba(244,197,66,0.7)",
-                "0 0 0px rgba(244,197,66,0.3)",
-              ],
-            } : {}}
+            animate={
+              isActive && !isDone
+                ? {
+                    boxShadow: [
+                      "0 0 0px rgba(244,197,66,0.3)",
+                      "0 0 14px rgba(244,197,66,0.7)",
+                      "0 0 0px rgba(244,197,66,0.3)",
+                    ],
+                  }
+                : {}
+            }
             transition={{ repeat: Infinity, duration: 1.8 }}
             style={{
-              width: 30, height: 30, flexShrink: 0, borderRadius: "50%",
+              width: 30,
+              height: 30,
+              flexShrink: 0,
+              borderRadius: "50%",
               background: isDone
                 ? "linear-gradient(135deg,#15803d,#22c55e)"
                 : isActive
                   ? "linear-gradient(135deg,#d4a017,#f4c542)"
                   : "rgba(255,255,255,0.08)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontFamily: "Barlow Condensed, sans-serif", fontWeight: 800,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: "Barlow Condensed, sans-serif",
+              fontWeight: 800,
               fontSize: "0.85rem",
               color: isDone || isActive ? "#fff" : "#64748b",
             }}
@@ -120,33 +167,58 @@ export default function TokenCard({
           </motion.div>
 
           <div style={{ minWidth: 0 }}>
-            <div style={{
-              fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              color: isDone ? "#22c55e" : isActive ? "#f4c542" : "#64748b",
-            }}>
-              {isDone ? "✅ সম্পন্ন" : isActive ? "← এখন দিন" : `টোকেন ${index + 1} / ${total}`}
+            <div
+              style={{
+                fontSize: "0.78rem",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: isDone ? "#22c55e" : isActive ? "#f4c542" : "#64748b",
+              }}
+            >
+              {isDone
+                ? "✅ সম্পন্ন"
+                : isActive
+                  ? "← এখন দিন"
+                  : `টোকেন ${index + 1} / ${total}`}
             </div>
             {!isDone && !isActive && (
-              <div style={{ fontSize: "0.72rem", color: "#334155" }}>পরে দিন</div>
+              <div style={{ fontSize: "0.72rem", color: "#334155" }}>
+                পরে দিন
+              </div>
             )}
           </div>
         </div>
 
         {/* Action buttons — stacked vertically on small, row on wide */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 5, flexShrink: 0 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 5,
+            flexShrink: 0,
+          }}
+        >
           {/* Copy icon button */}
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={handleCopy}
             title="ডিজিট কপি করুন"
             style={{
-              background: copied ? "rgba(22,163,74,0.2)" : "rgba(255,255,255,0.05)",
+              background: copied
+                ? "rgba(22,163,74,0.2)"
+                : "rgba(255,255,255,0.05)",
               border: `1px solid ${copied ? "rgba(22,163,74,0.5)" : "rgba(255,255,255,0.1)"}`,
-              borderRadius: 8, width: 34, height: 34,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              cursor: "pointer", color: copied ? "#22c55e" : "#94a3b8",
-              transition: "all 0.2s", alignSelf: "flex-end",
+              borderRadius: 8,
+              width: 34,
+              height: 34,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: copied ? "#22c55e" : "#94a3b8",
+              transition: "all 0.2s",
+              alignSelf: "flex-end",
             }}
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -158,34 +230,42 @@ export default function TokenCard({
               whileTap={{ scale: 0.9 }}
               onClick={handleMarkDone}
               style={{
-                background: isActive ? "rgba(22,163,74,0.15)" : "rgba(255,255,255,0.04)",
+                background: isActive
+                  ? "rgba(22,163,74,0.15)"
+                  : "rgba(255,255,255,0.04)",
                 border: `1px solid ${isActive ? "rgba(22,163,74,0.4)" : "rgba(255,255,255,0.08)"}`,
                 borderRadius: 8,
                 padding: "5px 8px",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 3,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 3,
                 cursor: "pointer",
                 color: isActive ? "#4ade80" : "#475569",
-                fontSize: "0.75rem", fontWeight: 700,
+                fontSize: "0.75rem",
+                fontWeight: 700,
                 fontFamily: "Hind Siliguri, sans-serif",
                 transition: "all 0.2s",
                 whiteSpace: "nowrap",
                 minWidth: 0,
               }}
             >
-              ✓ দেওয়া হলে <ChevronRight size={11} />
+              ✓ দেওয়া হয়েছে ! <ChevronRight size={11} />
             </motion.button>
           )}
         </div>
       </div>
 
       {/* ── Token digit groups ── */}
-      <div style={{
-        display: "flex",
-        gap: "6px",
-        flexWrap: "wrap",
-        alignItems: "center",
-        fontFamily: "JetBrains Mono, monospace",
-      }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "6px",
+          flexWrap: "wrap",
+          alignItems: "center",
+          fontFamily: "JetBrains Mono, monospace",
+        }}
+      >
         {groups.map((group, gi) => (
           <React.Fragment key={gi}>
             <motion.span
@@ -196,7 +276,9 @@ export default function TokenCard({
                 display: "inline-block",
                 background: isDone
                   ? "rgba(22,163,74,0.12)"
-                  : isActive ? "rgba(244,197,66,0.10)" : "rgba(255,255,255,0.05)",
+                  : isActive
+                    ? "rgba(244,197,66,0.10)"
+                    : "rgba(255,255,255,0.05)",
                 border: `1px solid ${isDone ? "rgba(22,163,74,0.22)" : "rgba(255,255,255,0.08)"}`,
                 borderRadius: 7,
                 padding: "6px 10px",
@@ -210,7 +292,16 @@ export default function TokenCard({
               {group}
             </motion.span>
             {gi < 4 && (
-              <span style={{ color: "#2d4a5e", fontSize: "1rem", fontWeight: 700, userSelect: "none" }}>—</span>
+              <span
+                style={{
+                  color: "#2d4a5e",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  userSelect: "none",
+                }}
+              >
+                —
+              </span>
             )}
           </React.Fragment>
         ))}
@@ -223,11 +314,15 @@ export default function TokenCard({
           animate={{ opacity: 1, height: "auto" }}
           transition={{ duration: 0.28 }}
           style={{
-            marginTop: 10, fontSize: "0.82rem", color: "#fbbf24",
-            fontFamily: "Hind Siliguri, sans-serif", lineHeight: 1.5,
+            marginTop: 10,
+            fontSize: "0.82rem",
+            color: "#fbbf24",
+            fontFamily: "Hind Siliguri, sans-serif",
+            lineHeight: 1.5,
           }}
         >
-          ⌨️ এই ২০টি সংখ্যা মিটারে দিন → Enter চাপুন → তারপর "দেওয়া হয়েছে" বাটনে ক্লিক করুন!
+          ⌨️ এই ২০টি সংখ্যা মিটারে দিন → Enter চাপুন → তারপর "দেওয়া হয়েছে"
+          বাটনে ক্লিক করুন!
         </motion.p>
       )}
     </motion.div>

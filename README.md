@@ -13,8 +13,6 @@ A React web app that helps Bangladeshi prepaid electricity meter users easily en
 
 ![App Screenshot](./home.png)
 
-> 💡 **How to add a screenshot:** Take a screenshot of the app, name it `screenshot.png`, and place it in the project root folder. It will appear here automatically.
-
 ---
 
 ## ✨ Features
