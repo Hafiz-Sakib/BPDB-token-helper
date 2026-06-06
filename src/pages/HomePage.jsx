@@ -28,17 +28,21 @@ export default function HomePage() {
 
   const handleParse = () => {
     if (!rawText.trim()) {
-      toast.error("এসএমএস বক্স ফাঁকা ! কপি করা SMS বা টোকেন বার্তা পেস্ট করুন।");
+      toast.error("এসএমএস বক্স ফাঁকা ! কপি করা SMS বা পুরো টোকেন পেস্ট করুন।");
       return;
     }
     const result = parseMessage(rawText);
     if (result.tokens.length === 0) {
-      toast.error("আপনার পেস্ট করা মেসেজ থেকে কোনো টোকেন খুঁজে পাওয়া যায়নি। আবার চেষ্টা করুন!");
+      toast.error(
+        "আপনার পেস্ট করা মেসেজ থেকে কোনো টোকেন খুঁজে পাওয়া যায়নি। আবার চেষ্টা করুন!",
+      );
       return;
     }
     sessionStorage.setItem("bpdb_tokens", JSON.stringify(result.tokens));
     sessionStorage.setItem("bpdb_meta", JSON.stringify(result.meta));
-    toast.success(`${result.tokens.length} টি টোকেন আলাদা করা হয়েছে!`, { icon: "⚡" });
+    toast.success(`${result.tokens.length} টি টোকেন আলাদা করা হয়েছে!`, {
+      icon: "⚡",
+    });
     navigate("/tokens");
   };
 
@@ -94,27 +98,43 @@ export default function HomePage() {
           ⚡
         </motion.div>
 
-        <h1 style={{
-          fontFamily: "Hind Siliguri, sans-serif", fontWeight: 700,
-          fontSize: "clamp(1.7rem, 6vw, 2.6rem)",
-          background: "linear-gradient(135deg,#22c55e 0%,#16a34a 50%,#86efac 100%)",
-          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-          backgroundClip: "text", marginBottom: 8, lineHeight: 1.2,
-        }}>
+        <h1
+          style={{
+            fontFamily: "Hind Siliguri, sans-serif",
+            fontWeight: 700,
+            fontSize: "clamp(1.7rem, 6vw, 2.6rem)",
+            background:
+              "linear-gradient(135deg,#22c55e 0%,#16a34a 50%,#86efac 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            marginBottom: 8,
+            lineHeight: 1.2,
+          }}
+        >
           BPDB প্রিপেইড টোকেন
         </h1>
 
-        <p style={{
-          fontFamily: "Hind Siliguri, sans-serif",
-          fontSize: "var(--fs-base)", color: "#64748b", lineHeight: 1.6,
-        }}>
+        <p
+          style={{
+            fontFamily: "Hind Siliguri, sans-serif",
+            fontSize: "var(--fs-base)",
+            color: "#64748b",
+            lineHeight: 1.6,
+          }}
+        >
           টোকেন এর এসএমএস পেস্ট করুন — সহজে ২০ ডিজিট করে মিটারে ইনপুট দিন!
         </p>
 
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          gap: 8, marginTop: 12,
-        }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            marginTop: 12,
+          }}
+        >
           <motion.div
             animate={{
               boxShadow: [
@@ -124,55 +144,98 @@ export default function HomePage() {
               ],
             }}
             transition={{ repeat: Infinity, duration: 2 }}
-            style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }}
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: "#22c55e",
+            }}
           />
-          <span style={{
-            fontSize: "var(--fs-xs)", color: "#475569",
-            textTransform: "uppercase", letterSpacing: "0.12em",
-            fontWeight: 700, fontFamily: "Barlow Condensed, sans-serif",
-          }}>
+          <span
+            style={{
+              fontSize: "var(--fs-xs)",
+              color: "#475569",
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              fontWeight: 700,
+              fontFamily: "Barlow Condensed, sans-serif",
+            }}
+          >
             Bangladesh Power Development Board
           </span>
         </div>
       </motion.header>
 
       {/* INPUT SECTION */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.38 }}
+      >
         <HowToPanel />
 
-        <div style={{ ...card, padding: "clamp(16px,3vw,22px)", marginBottom: 16 }}>
-          <div style={{
-            display: "flex", justifyContent: "space-between",
-            alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8,
-          }}>
-            <span style={{
-              fontFamily: "Hind Siliguri, sans-serif", fontWeight: 700,
-              fontSize: "var(--fs-sm)", textTransform: "uppercase",
-              letterSpacing: "0.08em", color: "#94a3b8",
-            }}>
-              টোকেন বার্তা পেস্ট করুন
+        <div
+          style={{ ...card, padding: "clamp(16px,3vw,22px)", marginBottom: 16 }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 12,
+              flexWrap: "wrap",
+              gap: 8,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "Hind Siliguri, sans-serif",
+                fontWeight: 700,
+                fontSize: "var(--fs-sm)",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: "#94a3b8",
+              }}
+            >
+              আপনার ফোনে আসা এসএমএস বা ২২০ ডিজিটের পুরো টোকেন পেস্ট করুন
             </span>
             <div style={{ display: "flex", gap: 8 }}>
-              <motion.button whileTap={{ scale: 0.95 }} onClick={handlePaste}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={handlePaste}
                 style={{
-                  display: "flex", alignItems: "center", gap: 5,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 8, padding: "6px 12px", cursor: "pointer",
-                  color: "#94a3b8", fontSize: "var(--fs-sm)",
+                  borderRadius: 8,
+                  padding: "6px 12px",
+                  cursor: "pointer",
+                  color: "#94a3b8",
+                  fontSize: "var(--fs-sm)",
                   fontFamily: "Hind Siliguri, sans-serif",
-                }}>
+                }}
+              >
                 <Clipboard size={14} /> পেস্ট
               </motion.button>
-              <motion.button whileTap={{ scale: 0.95 }} onClick={handleSample}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={handleSample}
                 style={{
-                  display: "flex", alignItems: "center", gap: 5,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
                   background: "rgba(22,163,74,0.08)",
                   border: "1px solid rgba(22,163,74,0.2)",
-                  borderRadius: 8, padding: "6px 12px", cursor: "pointer",
-                  color: "#4ade80", fontSize: "var(--fs-sm)",
+                  borderRadius: 8,
+                  padding: "6px 12px",
+                  cursor: "pointer",
+                  color: "#4ade80",
+                  fontSize: "var(--fs-sm)",
                   fontFamily: "Hind Siliguri, sans-serif",
-                }}>
+                }}
+              >
                 স্যাম্পল দেখুন !
               </motion.button>
             </div>
@@ -182,31 +245,52 @@ export default function HomePage() {
             onChange={(e) => setRawText(e.target.value)}
             placeholder="এখানে আপনার BPDB/DESCO/REB প্রিপেইড টোকেন এসএমএস টা পেস্ট করুন..."
             style={{
-              width: "100%", minHeight: "clamp(130px,25vw,180px)",
+              width: "100%",
+              minHeight: "clamp(130px,25vw,180px)",
               background: "rgba(8,38,61,0.9)",
               border: "1px solid rgba(255,255,255,0.08)",
               borderRadius: 12,
               padding: "clamp(10px,2vw,14px) clamp(12px,2.5vw,16px)",
-              color: "#e2e8f0", fontSize: "var(--fs-base)", lineHeight: 1.7,
+              color: "#e2e8f0",
+              fontSize: "var(--fs-base)",
+              lineHeight: 1.7,
               fontFamily: "Hind Siliguri, JetBrains Mono, sans-serif",
-              resize: "none", outline: "none",
-              transition: "border-color 0.25s", boxSizing: "border-box",
+              resize: "none",
+              outline: "none",
+              transition: "border-color 0.25s",
+              boxSizing: "border-box",
             }}
-            onFocus={(e) => (e.target.style.borderColor = "rgba(22,163,74,0.5)")}
-            onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
+            onFocus={(e) =>
+              (e.target.style.borderColor = "rgba(22,163,74,0.5)")
+            }
+            onBlur={(e) =>
+              (e.target.style.borderColor = "rgba(255,255,255,0.08)")
+            }
           />
         </div>
 
         <motion.button
-          whileHover={{ scale: 1.02, boxShadow: "0 8px 32px rgba(22,163,74,0.5)" }}
-          whileTap={{ scale: 0.98 }} onClick={handleParse}
+          whileHover={{
+            scale: 1.02,
+            boxShadow: "0 8px 32px rgba(22,163,74,0.5)",
+          }}
+          whileTap={{ scale: 0.98 }}
+          onClick={handleParse}
           style={{
-            width: "100%", background: "linear-gradient(135deg,#15803d,#16a34a)",
-            border: "none", borderRadius: 14,
+            width: "100%",
+            background: "linear-gradient(135deg,#15803d,#16a34a)",
+            border: "none",
+            borderRadius: 14,
             padding: "clamp(13px,2.5vw,17px) 24px",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            gap: 10, color: "#fff", fontWeight: 700, fontSize: "var(--fs-md)",
-            fontFamily: "Hind Siliguri, sans-serif", cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            color: "#fff",
+            fontWeight: 700,
+            fontSize: "var(--fs-md)",
+            fontFamily: "Hind Siliguri, sans-serif",
+            cursor: "pointer",
             letterSpacing: "0.02em",
           }}
         >
@@ -214,16 +298,27 @@ export default function HomePage() {
         </motion.button>
 
         <motion.button
-          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={() => navigate("/meter-codes")}
           style={{
-            width: "100%", marginTop: 12, background: "rgba(7,36,58,0.9)",
+            width: "100%",
+            marginTop: 12,
+            background: "rgba(7,36,58,0.9)",
             border: "1px solid rgba(22,163,74,0.25)",
-            borderRadius: 14, padding: "clamp(11px,2vw,14px) 24px",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            gap: 10, color: "#4ade80", fontWeight: 600, fontSize: "var(--fs-base)",
-            fontFamily: "Hind Siliguri, sans-serif", cursor: "pointer",
-            letterSpacing: "0.02em", transition: "border-color 0.2s, background 0.2s",
+            borderRadius: 14,
+            padding: "clamp(11px,2vw,14px) 24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            color: "#4ade80",
+            fontWeight: 600,
+            fontSize: "var(--fs-base)",
+            fontFamily: "Hind Siliguri, sans-serif",
+            cursor: "pointer",
+            letterSpacing: "0.02em",
+            transition: "border-color 0.2s, background 0.2s",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = "rgba(22,163,74,0.55)";
@@ -240,28 +335,45 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <motion.footer
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
         style={{
-          textAlign: "center", marginTop: 48, paddingTop: 24,
+          textAlign: "center",
+          marginTop: 48,
+          paddingTop: 24,
           borderTop: "1px solid rgba(255,255,255,0.05)",
         }}
       >
-        <p style={{
-          fontSize: "var(--fs-sm)", color: "#475569",
-          fontFamily: "Hind Siliguri, sans-serif", marginBottom: 6,
-        }}>
+        <p
+          style={{
+            fontSize: "var(--fs-sm)",
+            color: "#475569",
+            fontFamily: "Hind Siliguri, sans-serif",
+            marginBottom: 6,
+          }}
+        >
           • BPDB প্রিপেইড টোকেন হেল্পার • সহজে টোকেন মিটারে ইনপুট দিন •
         </p>
-        <p style={{
-          fontSize: "var(--fs-sm)", color: "#334155",
-          fontFamily: "Hind Siliguri, sans-serif",
-        }}>
+        <p
+          style={{
+            fontSize: "var(--fs-sm)",
+            color: "#334155",
+            fontFamily: "Hind Siliguri, sans-serif",
+          }}
+        >
           Made with ❤️ by{" "}
-          <a href="https://hafizsakib.vercel.app/" target="_blank" rel="noopener noreferrer"
+          <a
+            href="https://hafizsakib.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
-              color: "#22c55e", textDecoration: "none", fontWeight: 700,
+              color: "#22c55e",
+              textDecoration: "none",
+              fontWeight: 700,
               borderBottom: "1px solid rgba(22,163,74,0.4)",
-            }}>
+            }}
+          >
             Mohammad Hafizur Rahman Sakib
           </a>
         </p>
