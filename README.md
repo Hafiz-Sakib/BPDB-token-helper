@@ -11,7 +11,8 @@ A React web app that helps Bangladeshi prepaid electricity meter users easily en
 <!-- Add a screenshot of your website here -->
 <!-- Replace the placeholder below with your actual image -->
 
-![App Screenshot](./home.png)
+![HomePage](./home.png)
+![Tokens](./tokens.png)
 
 ---
 
