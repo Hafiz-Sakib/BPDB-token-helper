@@ -179,7 +179,7 @@ export default function TokenCard({
               }}
             >
               {isDone
-                ? "✅ সঠিকভাবে দেওয়া হয়েছে"
+                ? "সঠিকভাবে দেওয়া হয়েছে"
                 : isActive
                   ? "← এখন এই টোকেনটি দিন"
                   : `টোকেন নং ${index + 1} / ${total}`}

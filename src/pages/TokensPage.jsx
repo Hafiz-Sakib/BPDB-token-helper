@@ -7,6 +7,7 @@ import TokenCard from "../components/TokenCard";
 import MetaPanel from "../components/MetaPanel";
 import ProgressBar from "../components/ProgressBar";
 import SuccessScreen from "../components/SuccessScreen";
+import { Check } from "lucide-react";
 
 export default function TokensPage() {
   const navigate = useNavigate();
@@ -37,7 +38,9 @@ export default function TokensPage() {
     } else {
       const nextActive = idx + 1 < tokens.length ? idx + 1 : idx;
       setActiveIdx(nextActive);
-      toast(`টোকেন ${idx + 1} দেওয়া কমপ্লিট ✓`, { icon: "✅" });
+      toast(`টোকেন ${idx + 1} দেওয়া কমপ্লিট`, {
+        icon: <Check size={16} color="#22c55e" strokeWidth={6.5} />,
+      });
     }
   };
 
@@ -66,12 +69,20 @@ export default function TokensPage() {
         initial={{ opacity: 0, y: -24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        style={{ textAlign: "center", padding: "clamp(28px,5vw,48px) 0 clamp(16px,3vw,24px)" }}
+        style={{
+          textAlign: "center",
+          padding: "clamp(28px,5vw,48px) 0 clamp(16px,3vw,24px)",
+        }}
       >
         <motion.div
           animate={{ y: [0, -8, 0] }}
           transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-          style={{ fontSize: "clamp(36px,7vw,52px)", marginBottom: 10, display: "block", lineHeight: 1 }}
+          style={{
+            fontSize: "clamp(36px,7vw,52px)",
+            marginBottom: 10,
+            display: "block",
+            lineHeight: 1,
+          }}
         >
           ⚡
         </motion.div>
@@ -80,7 +91,8 @@ export default function TokensPage() {
             fontFamily: "Hind Siliguri, sans-serif",
             fontWeight: 700,
             fontSize: "clamp(1.4rem, 5vw, 2.2rem)",
-            background: "linear-gradient(135deg,#22c55e 0%,#16a34a 50%,#86efac 100%)",
+            background:
+              "linear-gradient(135deg,#22c55e 0%,#16a34a 50%,#86efac 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -90,7 +102,13 @@ export default function TokensPage() {
         >
           BPDB টোকেন তালিকা
         </h1>
-        <p style={{ fontFamily: "Hind Siliguri, sans-serif", fontSize: "var(--fs-base)", color: "#64748b" }}>
+        <p
+          style={{
+            fontFamily: "Hind Siliguri, sans-serif",
+            fontSize: "var(--fs-base)",
+            color: "#64748b",
+          }}
+        >
           মোট {tokens.length} টি টোকেন পাওয়া গেছে
         </p>
       </motion.header>
@@ -142,7 +160,8 @@ export default function TokensPage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(min(300px, 100%), 1fr))",
+                gridTemplateColumns:
+                  "repeat(auto-fill, minmax(min(300px, 100%), 1fr))",
                 gap: 14,
               }}
             >
@@ -155,7 +174,9 @@ export default function TokensPage() {
                   isActive={i === activeIdx && !doneSet.has(i)}
                   isDone={doneSet.has(i)}
                   onDone={handleMarkDone}
-                  onActivate={(idx) => { if (idx === activeIdx) setActiveIdx(idx); }}
+                  onActivate={(idx) => {
+                    if (idx === activeIdx) setActiveIdx(idx);
+                  }}
                 />
               ))}
             </div>
@@ -175,15 +196,41 @@ export default function TokensPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        style={{ textAlign: "center", marginTop: 48, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        style={{
+          textAlign: "center",
+          marginTop: 48,
+          paddingTop: 24,
+          borderTop: "1px solid rgba(255,255,255,0.05)",
+        }}
       >
-        <p style={{ fontSize: "var(--fs-sm)", color: "#475569", fontFamily: "Hind Siliguri, sans-serif", marginBottom: 6 }}>
+        <p
+          style={{
+            fontSize: "var(--fs-sm)",
+            color: "#475569",
+            fontFamily: "Hind Siliguri, sans-serif",
+            marginBottom: 6,
+          }}
+        >
           • BPDB প্রিপেইড টোকেন হেল্পার • সহজে টোকেন মিটারে ইনপুট দিন •
         </p>
-        <p style={{ fontSize: "var(--fs-sm)", color: "#334155", fontFamily: "Hind Siliguri, sans-serif" }}>
+        <p
+          style={{
+            fontSize: "var(--fs-sm)",
+            color: "#334155",
+            fontFamily: "Hind Siliguri, sans-serif",
+          }}
+        >
           Made with ❤️ by{" "}
-          <a href="https://hafizsakib.vercel.app/" target="_blank" rel="noopener noreferrer"
-            style={{ color: "#22c55e", textDecoration: "none", fontWeight: 700, borderBottom: "1px solid rgba(22,163,74,0.4)" }}
+          <a
+            href="https://hafizsakib.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "#22c55e",
+              textDecoration: "none",
+              fontWeight: 700,
+              borderBottom: "1px solid rgba(22,163,74,0.4)",
+            }}
           >
             Mohammad Hafizur Rahman Sakib
           </a>
