@@ -68,7 +68,7 @@ export default function TokenCard({
         transition: "background 0.3s, border-color 0.3s",
         overflow: "visible",
       }}
-      whileHover={(isActive && !isDone) ? { scale: 1.012, y: -2 } : {}}
+      whileHover={isActive && !isDone ? { scale: 1.012, y: -2 } : {}}
     >
       {/* Floating copy confirmation */}
       <AnimatePresence>
@@ -345,7 +345,7 @@ export default function TokenCard({
             lineHeight: 1.4,
           }}
         >
-          🔒 আগের টোকেন দেওয়ার পর এটি সক্রিয় হবে
+          🔒 টোকেনগুলো সিরিয়াল মেনে দিন !
         </motion.p>
       )}
     </motion.div>
