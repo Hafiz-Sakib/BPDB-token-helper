@@ -96,3 +96,10 @@ body {
   0%   { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(-60px); }
 }
+
+/* Mobile: push react-hot-toast below the inline visitor badge */
+@media (max-width: 639px) {
+  div[id^="__react-hot-toast"] > div {
+    top: 90px !important;
+  }
+}

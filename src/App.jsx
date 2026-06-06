@@ -21,10 +21,12 @@ export default function App() {
           fontFamily: "Hind Siliguri, sans-serif",
         }}
       >
-        {/* Toast — offset from top so it never overlaps visitor badge on mobile */}
+        {/* Toast offset:
+            - desktop: badge is fixed top-right (14px), toast top-center no conflict → 16px fine
+            - mobile: badge renders inline in layout, toast at top-center needs to clear it (~90px) */}
         <Toaster
           position="top-center"
-          containerStyle={{ top: 72 }}
+          containerStyle={{ top: 16 }}
           toastOptions={{
             style: {
               background: "#07243a",
@@ -38,10 +40,7 @@ export default function App() {
         />
         <div
           style={{
-            position: "fixed",
-            inset: 0,
-            pointerEvents: "none",
-            zIndex: 0,
+            position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
             backgroundImage:
               "linear-gradient(rgba(22,163,74,0.018) 1px, transparent 1px)," +
               "linear-gradient(90deg, rgba(22,163,74,0.018) 1px, transparent 1px)",
