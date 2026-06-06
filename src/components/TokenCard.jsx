@@ -49,7 +49,6 @@ export default function TokenCard({
 
   return (
     <motion.div
-      layout
       initial={{ opacity: 0, y: 20, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{
@@ -230,6 +229,7 @@ export default function TokenCard({
           {!isDone && (
             <motion.button
               whileTap={isActive ? { scale: 0.9 } : {}}
+              transition={{ duration: 0.14 }}
               onClick={handleMarkDone}
               disabled={!isActive}
               title={!isActive ? "আগের টোকেন আগে দিন" : ""}
@@ -249,7 +249,6 @@ export default function TokenCard({
                 fontSize: "0.75rem",
                 fontWeight: 700,
                 fontFamily: "Hind Siliguri, sans-serif",
-                transition: "all 0.2s",
                 whiteSpace: "nowrap",
                 minWidth: 0,
                 opacity: isActive ? 1 : 0.35,
