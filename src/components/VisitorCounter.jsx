@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Users } from "lucide-react";
 
 const API_UP = "https://api.counterapi.dev/v1/bpdb-token-helper/visitors/up";
+const API_GET = "https://api.counterapi.dev/v1/bpdb-token-helper/visitors";
+const SESSION_KEY = "bpdb_counted";
 
 const BADGE_STYLE_BASE = {
   display: "inline-flex",
@@ -25,36 +27,68 @@ function BadgeContent({ count }) {
   return (
     <>
       {/* Pulse dot */}
-      <div style={{ position: "relative", width: 10, height: 10, flexShrink: 0 }}>
+      <div
+        style={{ position: "relative", width: 10, height: 10, flexShrink: 0 }}
+      >
         <motion.div
           animate={{ scale: [1, 2.0, 1], opacity: [0.5, 0, 0.5] }}
           transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
           style={{
-            position: "absolute", inset: 0, borderRadius: "50%",
+            position: "absolute",
+            inset: 0,
+            borderRadius: "50%",
             background: "rgba(22,163,74,0.4)",
           }}
         />
-        <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "#22c55e" }} />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: "50%",
+            background: "#22c55e",
+          }}
+        />
       </div>
       {/* Count + label */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-        <span style={{
-          fontFamily: "'Hind Siliguri', sans-serif",
-          fontWeight: 700, fontSize: 16, lineHeight: "19px",
-          color: "#22c55e", whiteSpace: "nowrap",
-        }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "'Hind Siliguri', sans-serif",
+            fontWeight: 700,
+            fontSize: 16,
+            lineHeight: "19px",
+            color: "#22c55e",
+            whiteSpace: "nowrap",
+          }}
+        >
           {count.toLocaleString()}
         </span>
-        <span style={{
-          fontFamily: "'Hind Siliguri', sans-serif",
-          fontWeight: 600, fontSize: 12, lineHeight: "14px",
-          color: "#4a7a5a", whiteSpace: "nowrap",
-        }}>
+        <span
+          style={{
+            fontFamily: "'Hind Siliguri', sans-serif",
+            fontWeight: 600,
+            fontSize: 12,
+            lineHeight: "14px",
+            color: "#4a7a5a",
+            whiteSpace: "nowrap",
+          }}
+        >
           জন ভিজিট করেছেন
         </span>
       </div>
       {/* Icon */}
-      <Users size={15} color="rgba(34,197,94,0.45)" strokeWidth={2} style={{ flexShrink: 0 }} />
+      <Users
+        size={15}
+        color="rgba(34,197,94,0.45)"
+        strokeWidth={2}
+        style={{ flexShrink: 0 }}
+      />
     </>
   );
 }
@@ -74,23 +108,44 @@ export default function VisitorCounter() {
     const isLocal =
       window.location.hostname === "localhost" ||
       window.location.hostname === "127.0.0.1";
-    if (isLocal) { setCount(999); return; }
+
+    if (isLocal) {
+      setCount(999);
+      return;
+    }
+
     (async () => {
       try {
-        const res = await fetch(API_UP, { cache: "no-store" });
+        const alreadyCounted = sessionStorage.getItem(SESSION_KEY);
+
+        // First visit this session → increment; revisit/refresh → read only
+        const url = alreadyCounted ? API_GET : API_UP;
+        const res = await fetch(url, { cache: "no-store" });
         const data = await res.json();
+
         const val =
-          typeof data?.count === "number" ? data.count :
-          typeof data?.value === "number" ? data.value :
-          typeof data?.hits === "number" ? data.hits : null;
-        if (val !== null) setCount(val);
-      } catch { /* silent */ }
+          typeof data?.count === "number"
+            ? data.count
+            : typeof data?.value === "number"
+              ? data.value
+              : typeof data?.hits === "number"
+                ? data.hits
+                : null;
+
+        if (val !== null) {
+          setCount(val);
+          // Mark session so subsequent renders/tabs don't increment again
+          if (!alreadyCounted) sessionStorage.setItem(SESSION_KEY, "1");
+        }
+      } catch {
+        /* API down — stay hidden */
+      }
     })();
   }, []);
 
   if (count === null) return null;
 
-  // MOBILE: render inline, centered, inside the layout
+  // MOBILE: inline centered
   if (isMobile) {
     return (
       <motion.div
@@ -98,15 +153,19 @@ export default function VisitorCounter() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.35 }}
         title="মোট ভিজিটর"
-        style={{ ...BADGE_STYLE_BASE, margin: "0 auto 16px", width: "fit-content" }}
+        style={{
+          ...BADGE_STYLE_BASE,
+          margin: "0 auto 16px",
+          width: "fit-content",
+        }}
       >
         <BadgeContent count={count} />
       </motion.div>
     );
   }
 
-  // DESKTOP: fixed top-right corner via portal
-  const badge = (
+  // DESKTOP: fixed top-right via portal
+  return createPortal(
     <motion.div
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
@@ -121,8 +180,7 @@ export default function VisitorCounter() {
       }}
     >
       <BadgeContent count={count} />
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
-
-  return createPortal(badge, document.body);
 }
