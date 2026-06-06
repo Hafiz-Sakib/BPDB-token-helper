@@ -255,7 +255,7 @@ export default function TokenCard({
                 opacity: isActive ? 1 : 0.35,
               }}
             >
-              ✓ দেওয়া হলে ক্লিক ! <ChevronRight size={11} />
+              ✓ দেওয়া হলে এখানে ক্লিক করুন ! <ChevronRight size={11} />
             </motion.button>
           )}
         </div>
