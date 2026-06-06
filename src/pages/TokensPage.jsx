@@ -155,7 +155,7 @@ export default function TokensPage() {
                   isActive={i === activeIdx && !doneSet.has(i)}
                   isDone={doneSet.has(i)}
                   onDone={handleMarkDone}
-                  onActivate={setActiveIdx}
+                  onActivate={(idx) => { if (idx === activeIdx) setActiveIdx(idx); }}
                 />
               ))}
             </div>

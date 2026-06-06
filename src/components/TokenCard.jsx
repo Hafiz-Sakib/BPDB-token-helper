@@ -30,6 +30,8 @@ export default function TokenCard({
 
   const handleMarkDone = (e) => {
     e.stopPropagation();
+    // Serial enforcement: only the currently active token can be marked done
+    if (!isActive) return;
     onDone(index);
   };
 
@@ -55,18 +57,18 @@ export default function TokenCard({
         delay: index * 0.055,
         ease: [0.4, 0, 0.2, 1],
       }}
-      onClick={() => !isDone && onActivate(index)}
+      onClick={() => !isDone && isActive && onActivate(index)}
       style={{
         position: "relative",
         background: bgColor,
         border: `1px solid ${borderColor}`,
         borderRadius: 16,
         padding: "14px",
-        cursor: isDone ? "default" : "pointer",
+        cursor: isDone ? "default" : isActive ? "pointer" : "default",
         transition: "background 0.3s, border-color 0.3s",
         overflow: "visible",
       }}
-      whileHover={!isDone ? { scale: 1.012, y: -2 } : {}}
+      whileHover={(isActive && !isDone) ? { scale: 1.012, y: -2 } : {}}
     >
       {/* Floating copy confirmation */}
       <AnimatePresence>
@@ -190,7 +192,7 @@ export default function TokenCard({
           </div>
         </div>
 
-        {/* Action buttons — stacked vertically on small, row on wide */}
+        {/* Action buttons */}
         <div
           style={{
             display: "flex",
@@ -224,33 +226,36 @@ export default function TokenCard({
             {copied ? <Check size={14} /> : <Copy size={14} />}
           </motion.button>
 
-          {/* Mark done button — full width, wraps naturally */}
+          {/* Mark done button — SERIAL ONLY: disabled unless this is the active token */}
           {!isDone && (
             <motion.button
-              whileTap={{ scale: 0.9 }}
+              whileTap={isActive ? { scale: 0.9 } : {}}
               onClick={handleMarkDone}
+              disabled={!isActive}
+              title={!isActive ? "আগের টোকেন আগে দিন" : ""}
               style={{
                 background: isActive
                   ? "rgba(22,163,74,0.15)"
-                  : "rgba(255,255,255,0.04)",
-                border: `1px solid ${isActive ? "rgba(22,163,74,0.4)" : "rgba(255,255,255,0.08)"}`,
+                  : "rgba(255,255,255,0.02)",
+                border: `1px solid ${isActive ? "rgba(22,163,74,0.4)" : "rgba(255,255,255,0.04)"}`,
                 borderRadius: 8,
                 padding: "5px 8px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 3,
-                cursor: "pointer",
-                color: isActive ? "#4ade80" : "#475569",
+                cursor: isActive ? "pointer" : "not-allowed",
+                color: isActive ? "#4ade80" : "#2d3f50",
                 fontSize: "0.75rem",
                 fontWeight: 700,
                 fontFamily: "Hind Siliguri, sans-serif",
                 transition: "all 0.2s",
                 whiteSpace: "nowrap",
                 minWidth: 0,
+                opacity: isActive ? 1 : 0.35,
               }}
             >
-              ✓ দেওয়া হয়েছে ! <ChevronRight size={11} />
+              ✓ দেওয়া হয়েছে ! <ChevronRight size={11} />
             </motion.button>
           )}
         </div>
@@ -323,6 +328,24 @@ export default function TokenCard({
         >
           ⌨️ এই ২০টি সংখ্যা মিটারে দিন → Enter চাপুন → তারপর "দেওয়া হয়েছে"
           বাটনে ক্লিক করুন!
+        </motion.p>
+      )}
+
+      {/* Lock hint for non-active cards */}
+      {!isActive && !isDone && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.28 }}
+          style={{
+            marginTop: 8,
+            fontSize: "0.75rem",
+            color: "#334155",
+            fontFamily: "Hind Siliguri, sans-serif",
+            lineHeight: 1.4,
+          }}
+        >
+          🔒 আগের টোকেন দেওয়ার পর এটি সক্রিয় হবে
         </motion.p>
       )}
     </motion.div>
