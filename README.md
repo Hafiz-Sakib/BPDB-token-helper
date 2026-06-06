@@ -2,7 +2,7 @@
 
 A React web app that helps Bangladeshi prepaid electricity meter users easily enter their 20-digit tokens one by one — without losing track.
 
-> **Live Demo:** _add your deployment URL here_
+> **Live Demo:** [_add your deployment URL here_](https://bpdb-token-helper.vercel.app/)
 
 ---
 
