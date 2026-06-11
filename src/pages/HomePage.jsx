@@ -331,6 +331,45 @@ export default function HomePage() {
         >
           <Binary size={18} /> মিটার এর শর্ট কোড দেখুন
         </motion.button>
+
+        <motion.a
+          href="https://web.bpdbprepaid.gov.bd/en/token-check"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          style={{
+            width: "100%",
+            marginTop: 12,
+            background: "rgba(7,36,58,0.9)",
+            border: "1px solid rgba(96,165,250,0.25)",
+            borderRadius: 14,
+            padding: "clamp(11px,2vw,14px) 24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            color: "#93c5fd",
+            fontWeight: 600,
+            fontSize: "var(--fs-base)",
+            fontFamily: "Hind Siliguri, sans-serif",
+            cursor: "pointer",
+            letterSpacing: "0.02em",
+            textDecoration: "none",
+            transition: "border-color 0.2s, background 0.2s",
+            boxSizing: "border-box",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "rgba(96,165,250,0.55)";
+            e.currentTarget.style.background = "rgba(96,165,250,0.08)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "rgba(96,165,250,0.25)";
+            e.currentTarget.style.background = "rgba(7,36,58,0.9)";
+          }}
+        >
+          🔍 টোকেন বের করুন (BPDB ওয়েবসাইট)
+        </motion.a>
       </motion.div>
 
       {/* FOOTER */}
