@@ -99,8 +99,8 @@ function extractMeta(raw) {
   const rebateMatch = flat.match(/Rebate[:\s]+(-?[\d.]+)/i);
   if (rebateMatch) meta.rebate = parseFloat(rebateMatch[1]);
 
-  // Sequence range  e.g. "SqNo:-1~9" or "SquNo:-1~9"
-  const seqMatch = flat.match(/S(?:qu?)\s*No[:\s-]*(\d+)\s*[~–-]\s*(\d+)/i);
+  // Sequence range  e.g. "SqNo:-1~9" or "SquNo:-1~9" or "SqNo:0~9"
+  const seqMatch = flat.match(/S(?:qu?)\s*No[:\s]*(-?\d+)\s*[~–-]\s*(-?\d+)/i);
   if (seqMatch) {
     meta.seqStart = parseInt(seqMatch[1]);
     meta.seqEnd   = parseInt(seqMatch[2]);

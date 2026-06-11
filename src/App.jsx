@@ -5,6 +5,8 @@ import HomePage from "./pages/HomePage";
 import TokensPage from "./pages/TokensPage";
 import MeterCodesPage from "./pages/MeterCodesPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import SuccessPage from "./pages/SuccessPage";
+import IssuesPage from "./pages/IssuesPage";
 
 export default function App() {
   return (
@@ -50,6 +52,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/tokens" element={<TokensPage />} />
+          <Route path="/success" element={<SuccessPage />} />
+          <Route path="/issues" element={<IssuesPage />} />
           <Route path="/meter-codes" element={<MeterCodesPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
